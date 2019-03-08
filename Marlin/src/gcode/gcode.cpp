@@ -40,6 +40,11 @@ GcodeSuite gcode;
   #include "../feature/host_actions.h"
 #endif
 
+#if ENABLED(POWER_LOSS_RECOVERY)
+  #include "../sd/cardreader.h"
+  #include "../feature/power_loss_recovery.h"
+#endif
+
 #include "../Marlin.h" // for idle() and suspend_auto_report
 
 millis_t GcodeSuite::previous_move_ms;
@@ -86,8 +91,9 @@ int8_t GcodeSuite::get_target_extruder_from_command() {
  *  - Set the feedrate, if included
  */
 void GcodeSuite::get_destination_from_command() {
+  bool seen[XYZE] = { false, false, false, false };
   LOOP_XYZE(i) {
-    if (parser.seen(axis_codes[i])) {
+    if ( (seen[i] = parser.seenval(axis_codes[i])) ) {
       const float v = parser.value_axis_units((AxisEnum)i);
       destination[i] = (axis_relative_modes[i] || relative_mode)
         ? current_position[i] + v
@@ -96,6 +102,11 @@ void GcodeSuite::get_destination_from_command() {
     else
       destination[i] = current_position[i];
   }
+
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    // Only update power loss recovery on moves with E
+    if ((seen[E_AXIS] || seen[Z_AXIS]) && IS_SD_PRINTING()) recovery.save();
+  #endif
 
   if (parser.linearval('F') > 0)
     feedrate_mm_s = MMM_TO_MMS(parser.value_feedrate());
@@ -140,7 +151,7 @@ void GcodeSuite::dwell(millis_t time) {
     }
 
     #if ENABLED(HOST_PROMPT_SUPPORT)
-      if (host_prompt_reason == PROMPT_G29_RETRY) host_action_prompt_end();
+      host_action_prompt_end();
     #endif
 
     #ifdef G29_SUCCESS_COMMANDS
@@ -206,6 +217,8 @@ void GcodeSuite::process_parsed_command(
       #if ENABLED(INCH_MODE_SUPPORT)
         case 20: G20(); break;                                    // G20: Inch Mode
         case 21: G21(); break;                                    // G21: MM Mode
+      #else
+        case 21: NOOP; break;                                     // No error on unknown G21
       #endif
 
       #if ENABLED(G26_MESH_VALIDATION)
@@ -377,6 +390,11 @@ void GcodeSuite::process_parsed_command(
       #if HAS_HEATED_BED
         case 140: M140(); break;                                  // M140: Set bed temperature
         case 190: M190(); break;                                  // M190: Wait for bed temperature to reach target
+      #endif
+
+      #if HAS_HEATED_CHAMBER
+        case 141: M141(); break;                                  // M141: Set chamber temperature
+        //case 191: M191(); break;                                // M191: Wait for chamber temperature to reach target
       #endif
 
       case 105: M105(); KEEPALIVE_STATE(NOT_BUSY); return;        // M105: Report Temperatures (and say "ok")
@@ -662,7 +680,7 @@ void GcodeSuite::process_parsed_command(
       #endif
 
       #if HAS_TRINAMIC
-        case 122: M122(); break;
+        case 122: M122(); break;                                  // M122: Report driver configuration and status
         case 906: M906(); break;                                  // M906: Set motor current in milliamps using axis codes X, Y, Z, E
         #if HAS_STEALTHCHOP
           case 569: M569(); break;                                // M569: Enable stealthChop on an axis.
@@ -721,6 +739,10 @@ void GcodeSuite::process_parsed_command(
         case 422: M422(); break;                                  // M422: Set Z Stepper automatic alignment position using probe
       #endif
 
+      #if ENABLED(PLATFORM_M997_SUPPORT)
+        case 997: M997(); break;                                  // M997: Perform in-application firmware update
+      #endif
+
       case 999: M999(); break;                                    // M999: Restart after being Stopped
 
       #if ENABLED(POWER_LOSS_RECOVERY)
@@ -751,6 +773,8 @@ void GcodeSuite::process_parsed_command(
  */
 void GcodeSuite::process_next_command() {
   char * const current_command = command_queue[cmd_queue_index_r];
+
+  PORT_REDIRECT(command_queue_port[cmd_queue_index_r]);
 
   if (DEBUGGING(ECHO)) {
     SERIAL_ECHO_START();

@@ -137,6 +137,10 @@ bool load_filament(const float &slow_load_length/*=0*/, const float &fast_load_l
                    const AdvancedPauseMode mode/*=ADVANCED_PAUSE_MODE_PAUSE_PRINT*/
                    DXC_ARGS
 ) {
+  #if !HAS_LCD_MENU
+    UNUSED(show_lcd);
+  #endif
+
   if (!ensure_safe_temperature(mode)) {
     #if HAS_LCD_MENU
       if (show_lcd) lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_STATUS, mode);
@@ -183,8 +187,6 @@ bool load_filament(const float &slow_load_length/*=0*/, const float &fast_load_l
 
   #if HAS_LCD_MENU
     if (show_lcd) lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_LOAD, mode);
-  #else
-    UNUSED(show_lcd);
   #endif
 
   #if ENABLED(DUAL_X_CARRIAGE)
@@ -276,7 +278,7 @@ bool load_filament(const float &slow_load_length/*=0*/, const float &fast_load_l
       // Keep looping if "Purge More" was selected
     } while (false
       #if HAS_LCD_MENU
-        && show_lcd && advanced_pause_menu_response == ADVANCED_PAUSE_RESPONSE_EXTRUDE_MORE
+        || (show_lcd && advanced_pause_menu_response == ADVANCED_PAUSE_RESPONSE_EXTRUDE_MORE)
       #endif
     );
 
@@ -298,6 +300,10 @@ bool load_filament(const float &slow_load_length/*=0*/, const float &fast_load_l
 bool unload_filament(const float &unload_length, const bool show_lcd/*=false*/,
                      const AdvancedPauseMode mode/*=ADVANCED_PAUSE_MODE_PAUSE_PRINT*/
 ) {
+  #if !HAS_LCD_MENU
+    UNUSED(show_lcd);
+  #endif
+
   if (!ensure_safe_temperature(mode)) {
     #if HAS_LCD_MENU
       if (show_lcd) lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_STATUS);
@@ -308,8 +314,6 @@ bool unload_filament(const float &unload_length, const bool show_lcd/*=false*/,
 
   #if HAS_LCD_MENU
     if (show_lcd) lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_UNLOAD, mode);
-  #else
-    UNUSED(show_lcd);
   #endif
 
   // Retract filament
@@ -361,6 +365,10 @@ uint8_t did_pause_print = 0;
 
 bool pause_print(const float &retract, const point_t &park_point, const float &unload_length/*=0*/, const bool show_lcd/*=false*/ DXC_ARGS) {
 
+  #if !HAS_LCD_MENU
+    UNUSED(show_lcd);
+  #endif
+
   if (did_pause_print) return false; // already paused
 
   #if ENABLED(HOST_ACTION_COMMANDS)
@@ -382,8 +390,6 @@ bool pause_print(const float &retract, const point_t &park_point, const float &u
         lcd_advanced_pause_show_message(ADVANCED_PAUSE_MESSAGE_STATUS);
         LCD_MESSAGEPGM(MSG_M600_TOO_COLD);
       }
-    #else
-      UNUSED(show_lcd);
     #endif
 
     return false; // unable to reach safe temperature
@@ -476,8 +482,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
   // Start the heater idle timers
   const millis_t nozzle_timeout = (millis_t)(PAUSE_PARK_NOZZLE_TIMEOUT) * 1000UL;
 
-  HOTEND_LOOP()
-    thermalManager.start_heater_idle_timer(e, nozzle_timeout);
+  HOTEND_LOOP() thermalManager.hotend_idle[e].start(nozzle_timeout);
 
   #if ENABLED(DUAL_X_CARRIAGE)
     const int8_t saved_ext        = active_extruder;
@@ -499,7 +504,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
 
     // If the nozzle has timed out...
     if (!nozzle_timed_out)
-      HOTEND_LOOP() nozzle_timed_out |= thermalManager.is_heater_idle(e);
+      HOTEND_LOOP() nozzle_timed_out |= thermalManager.hotend_idle[e].timed_out;
 
     // Wait for the user to press the button to re-heat the nozzle, then
     // re-heat the nozzle, re-show the continue prompt, restart idle timers, start over
@@ -532,8 +537,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
       // Start the heater idle timers
       const millis_t nozzle_timeout = (millis_t)(PAUSE_PARK_NOZZLE_TIMEOUT) * 1000UL;
 
-      HOTEND_LOOP()
-        thermalManager.start_heater_idle_timer(e, nozzle_timeout);
+      HOTEND_LOOP() thermalManager.hotend_idle[e].start(nozzle_timeout);
       #if ENABLED(HOST_PROMPT_SUPPORT)
         host_prompt_do(PROMPT_USER_CONTINUE, PSTR("Reheat Done"), PSTR("Continue"));
       #endif
@@ -575,11 +579,12 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
  */
 void resume_print(const float &slow_load_length/*=0*/, const float &fast_load_length/*=0*/, const float &purge_length/*=ADVANCED_PAUSE_PURGE_LENGTH*/, const int8_t max_beep_count/*=0*/ DXC_ARGS) {
   /*
-  SERIAL_ECHOLNPGM("start of resume_print()");
-  SERIAL_ECHOPAIR("\ndual_x_carriage_mode:", dual_x_carriage_mode);
-  SERIAL_ECHOPAIR("\nextruder_duplication_enabled:", extruder_duplication_enabled);
-  SERIAL_ECHOPAIR("\nactive_extruder:", active_extruder);
-  SERIAL_ECHOLNPGM("\n");
+  SERIAL_ECHOLNPAIR(
+    "start of resume_print()\ndual_x_carriage_mode:", dual_x_carriage_mode,
+    "\nextruder_duplication_enabled:", extruder_duplication_enabled,
+    "\nactive_extruder:", active_extruder,
+    "\n"
+  );
   //*/
 
   if (!did_pause_print) return;
@@ -587,7 +592,7 @@ void resume_print(const float &slow_load_length/*=0*/, const float &fast_load_le
   // Re-enable the heaters if they timed out
   bool nozzle_timed_out = false;
   HOTEND_LOOP() {
-    nozzle_timed_out |= thermalManager.is_heater_idle(e);
+    nozzle_timed_out |= thermalManager.hotend_idle[e].timed_out;
     thermalManager.reset_heater_idle_timer(e);
   }
 
