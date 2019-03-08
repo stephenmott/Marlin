@@ -696,7 +696,8 @@
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 79.25, 79.25, 396.25, 500 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 79.25, 79.25, 396.25, 500 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 79.25, 79.25, 396.25, 305 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -871,7 +872,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER 0  // X offset: -left  +right  [of the nozzle]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 90  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 0.80   // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -0.5   // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 30
@@ -967,7 +968,7 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR false
+#define INVERT_E0_DIR true
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -992,7 +993,7 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 190
+#define X_BED_SIZE 210
 #define Y_BED_SIZE 280
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
@@ -1472,8 +1473,8 @@
   #define NOZZLE_CLEAN_TRIANGLES  3
 
   // Specify positions as { X, Y, Z }
-  #define NOZZLE_CLEAN_START_POINT { 48, 6, 0}
-  #define NOZZLE_CLEAN_END_POINT   {128, 12, 0}
+  #define NOZZLE_CLEAN_START_POINT { 50, 0, 1}
+  #define NOZZLE_CLEAN_END_POINT   {128, 8, 2}
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 5
@@ -1630,7 +1631,7 @@
 //
 //  Set this option if CLOCKWISE causes values to DECREASE
 //
-//#define REVERSE_ENCODER_DIRECTION
+#define REVERSE_ENCODER_DIRECTION
 
 //
 // This option reverses the encoder direction for navigating LCD menus.
@@ -1638,7 +1639,7 @@
 //  If CLOCKWISE normally moves DOWN this makes it go UP.
 //  If CLOCKWISE normally moves UP this makes it go DOWN.
 //
-//#define REVERSE_MENU_DIRECTION
+#define REVERSE_MENU_DIRECTION
 
 //
 // Individual Axis Homing
@@ -1676,7 +1677,7 @@
 //
 // Note: Usually sold with a white PCB.
 //
-#define REPRAP_DISCOUNT_SMART_CONTROLLER
+//#define REPRAP_DISCOUNT_SMART_CONTROLLER
 
 //
 // Original RADDS LCD Display+Encoder+SDCardReader
@@ -1816,7 +1817,7 @@
 // RepRapDiscount FULL GRAPHIC Smart Controller
 // http://reprap.org/wiki/RepRapDiscount_Full_Graphic_Smart_Controller
 //
-//#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+#define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 
 //
 // ReprapWorld Graphical LCD
