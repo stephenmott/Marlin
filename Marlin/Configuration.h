@@ -386,7 +386,6 @@
 //#define TEMP_SENSOR_1_AS_REDUNDANT
 #define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
-<<<<<<< HEAD
 // Extruder temperature must be close to target for this long before M109 returns success
 #define TEMP_RESIDENCY_TIME 10  // (seconds)
 #define TEMP_HYSTERESIS 3       // (degC) range of +/- temperatures considered "close" to the target one
@@ -418,40 +417,6 @@
 #define HEATER_4_MAXTEMP 300
 #define HEATER_5_MAXTEMP 300
 #define BED_MAXTEMP 150
-=======
-#define TEMP_RESIDENCY_TIME     10  // (seconds) Time to wait for hotend to "settle" in M109
-#define TEMP_WINDOW              1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_HYSTERESIS          3  // (°C) Temperature proximity considered "close enough" to the target
-
-#define TEMP_BED_RESIDENCY_TIME 10  // (seconds) Time to wait for bed to "settle" in M190
-#define TEMP_BED_WINDOW          1  // (°C) Temperature proximity for the "temperature reached" timer
-#define TEMP_BED_HYSTERESIS      3  // (°C) Temperature proximity considered "close enough" to the target
-
-#define TEMP_CHAMBER_HYSTERESIS  3  // (°C) Temperature proximity considered "close enough" to the target
-
-// Below this temperature the heater will be switched off
-// because it probably indicates a broken thermistor wire.
-#define HEATER_0_MINTEMP   5
-#define HEATER_1_MINTEMP   5
-#define HEATER_2_MINTEMP   5
-#define HEATER_3_MINTEMP   5
-#define HEATER_4_MINTEMP   5
-#define HEATER_5_MINTEMP   5
-#define BED_MINTEMP        5
-#define CHAMBER_MINTEMP    5
-
-// Above this temperature the heater will be switched off.
-// This can protect components from overheating, but NOT from shorts and failures.
-// (Use MINTEMP for thermistor short/failure protection.)
-#define HEATER_0_MAXTEMP 275
-#define HEATER_1_MAXTEMP 275
-#define HEATER_2_MAXTEMP 275
-#define HEATER_3_MAXTEMP 275
-#define HEATER_4_MAXTEMP 275
-#define HEATER_5_MAXTEMP 275
-#define BED_MAXTEMP      150
-#define CHAMBER_MAXTEMP  100
->>>>>>> MarlinFirmware/bugfix-2.0.x
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -1187,14 +1152,9 @@
   #if ENABLED(G26_MESH_VALIDATION)
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
     #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for the G26 Mesh Validation Tool.
-<<<<<<< HEAD
-    #define MESH_TEST_HOTEND_TEMP  210.0  // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
-    #define MESH_TEST_BED_TEMP      55.0  // (°C) Default bed temperature for the G26 Mesh Validation Tool.
-=======
     #define MESH_TEST_HOTEND_TEMP  205    // (°C) Default nozzle temperature for the G26 Mesh Validation Tool.
     #define MESH_TEST_BED_TEMP      60    // (°C) Default bed temperature for the G26 Mesh Validation Tool.
     #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for XY Moves for the G26 Mesh Validation Tool.
->>>>>>> MarlinFirmware/bugfix-2.0.x
   #endif
 
 #endif

@@ -126,7 +126,7 @@
   #define E1_CS_PIN        42
 #endif
 
-#define E0_STEP_PIN        36
+#define E0_STEP_PIN        36 
 #define E0_DIR_PIN         34
 #define E0_ENABLE_PIN      30
 #ifndef E0_CS_PIN
