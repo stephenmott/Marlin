@@ -535,7 +535,7 @@
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 200
+#define EXTRUDE_MAXLENGTH 500
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -928,7 +928,7 @@
 #define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
-//#define Z_MIN_PROBE_REPEATABILITY_TEST
+#define Z_MIN_PROBE_REPEATABILITY_TEST
 
 // Before deploy/stow pause for user confirmation
 //#define PAUSE_BEFORE_DEPLOY_STOW
@@ -1005,7 +1005,9 @@
 
 // The size of the print bed
 #define X_BED_SIZE 210
-#define Y_BED_SIZE 280
+#define Y_BED_SIZE 275
+
+#define MAX_PROBE_Y Y_BED_SIZE-40
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
