@@ -4,5 +4,10 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"terminal.integrated.env.osx": {
+			"PATH": "/Users/stevem/.platformio/penv/bin:/Users/stevem/.platformio/penv:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public",
+			"PLATFORMIO_CALLER": "vscode"
+		}
+	}
 }

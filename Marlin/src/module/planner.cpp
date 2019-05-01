@@ -1578,7 +1578,7 @@ void Planner::synchronize() {
       extern float backlash_smoothing_mm;
     #endif
   #else
-    constexpr float backlash_distance_mm[XYZ] = BACKLASH_DISTANCE_MM,
+    constexpr float backlash_distance_mm[XYZ] = BACKLASH_DISTANCE_MM;
     constexpr uint8_t backlash_correction = BACKLASH_CORRECTION * 255;
     #ifdef BACKLASH_SMOOTHING_MM
       constexpr float backlash_smoothing_mm = BACKLASH_SMOOTHING_MM;
