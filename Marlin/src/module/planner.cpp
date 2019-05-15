@@ -92,6 +92,10 @@
   #include "../feature/power.h"
 #endif
 
+#if ENABLED(BACKLASH_COMPENSATION)
+  #include "../feature/backlash.h"
+#endif
+
 // Delay for delivery of first block to the stepper ISR, if the queue contains 2 or
 // fewer movements. The delay is measured in milliseconds, and must be less than 250ms
 #define BLOCK_DELAY_FOR_1ST_MOVE 100
@@ -896,7 +900,7 @@ void Planner::reverse_pass() {
   // Reverse Pass: Coarsely maximize all possible deceleration curves back-planning from the last
   // block in buffer. Cease planning when the last optimal planned or tail pointer is reached.
   // NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
-  const block_t *next = NULL;
+  const block_t *next = nullptr;
   while (block_index != planned_block_index) {
 
     // Perform the reverse pass
@@ -991,7 +995,7 @@ void Planner::forward_pass() {
   uint8_t block_index = block_buffer_planned;
 
   block_t *current;
-  const block_t * previous = NULL;
+  const block_t * previous = nullptr;
   while (block_index != block_buffer_head) {
 
     // Perform the forward pass
@@ -1041,7 +1045,7 @@ void Planner::recalculate_trapezoids() {
   }
 
   // Go from the tail (currently executed block) to the first block, without including it)
-  block_t *current = NULL, *next = NULL;
+  block_t *current = nullptr, *next = nullptr;
   float current_entry_speed = 0.0, next_entry_speed = 0.0;
   while (block_index != head_block_index) {
 
@@ -1561,6 +1565,7 @@ void Planner::synchronize() {
 }
 
 /**
+<<<<<<< HEAD
  * The following implements axis backlash correction. To minimize seams
  * on the printed part, the backlash correction only adds steps to the
  * current segment (instead of creating a new segment, which causes
@@ -1649,6 +1654,8 @@ void Planner::synchronize() {
 #endif // BACKLASH_COMPENSATION
 
 /**
+=======
+>>>>>>> MarlinFirmware/bugfix-2.0.x
  * Planner::_buffer_steps
  *
  * Add a new linear movement to the planner queue (in terms of steps).
@@ -1767,13 +1774,26 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
         }
       #endif // PREVENT_COLD_EXTRUSION
       #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
-        if (ABS(de * e_factor[extruder]) > (int32_t)settings.axis_steps_per_mm[E_AXIS_N(extruder)] * (EXTRUDE_MAXLENGTH)) { // It's not important to get max. extrusion length in a precision < 1mm, so save some cycles and cast to int
-          position[E_AXIS] = target[E_AXIS]; // Behave as if the move really took place, but ignore E part
-          #if HAS_POSITION_FLOAT
-            position_float[E_AXIS] = target_float[E_AXIS];
+        const float e_steps = ABS(de * e_factor[extruder]);
+        const float max_e_steps = settings.axis_steps_per_mm[E_AXIS_N(extruder)] * (EXTRUDE_MAXLENGTH);
+        if (e_steps > max_e_steps) {
+          #if ENABLED(MIXING_EXTRUDER)
+            bool ignore_e = false;
+            float collector[MIXING_STEPPERS];
+            mixer.refresh_collector(1.0, mixer.get_current_vtool(), collector);
+            MIXER_STEPPER_LOOP(e)
+              if (e_steps * collector[e] > max_e_steps) { ignore_e = true; break; }
+          #else
+            constexpr bool ignore_e = true;
           #endif
-          de = 0; // no difference
-          SERIAL_ECHO_MSG(MSG_ERR_LONG_EXTRUDE_STOP);
+          if (ignore_e) {
+            position[E_AXIS] = target[E_AXIS]; // Behave as if the move really took place, but ignore E part
+            #if HAS_POSITION_FLOAT
+              position_float[E_AXIS] = target_float[E_AXIS];
+            #endif
+            de = 0; // no difference
+            SERIAL_ECHO_MSG(MSG_ERR_LONG_EXTRUDE_STOP);
+          }
         }
       #endif // PREVENT_LENGTHY_EXTRUDE
     }
@@ -1906,7 +1926,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
      * should *never* remove steps!
      */
     #if ENABLED(BACKLASH_COMPENSATION)
-      add_backlash_correction_steps(da, db, dc, dm, block);
+      backlash.add_correction_steps(da, db, dc, dm, block);
     #endif
   }
 
