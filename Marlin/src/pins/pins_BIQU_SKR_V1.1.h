@@ -80,6 +80,7 @@
 #endif
 #define FAN_PIN            P2_03
 #define HEATER_BED_PIN     P2_05
+#define FAN2_PIN           P2_06
 
 /**
  * LCD / Controller
