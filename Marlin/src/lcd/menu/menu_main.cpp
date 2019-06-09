@@ -53,6 +53,8 @@
 #if MACHINE_CAN_PAUSE
 
   void lcd_pause_job() {
+    ui.synchronize(PSTR(MSG_PAUSE_PRINT));
+
     #if ENABLED(POWER_LOSS_RECOVERY)
       if (recovery.enabled) recovery.save(true, false);
     #endif
@@ -69,7 +71,6 @@
     #elif defined(ACTION_ON_PAUSE)
       host_action_pause();
     #endif
-    planner.synchronize();
   }
 
   void lcd_resume() {
@@ -101,7 +102,7 @@
   }
 
   void menu_abort_confirm() {
-    do_select_screen(PSTR(MSG_BUTTON_STOP), PSTR(MSG_BACK), lcd_abort_job, ui.goto_previous_screen, PSTR(MSG_STOP_PRINT), NULL, PSTR("?"));
+    do_select_screen(PSTR(MSG_BUTTON_STOP), PSTR(MSG_BACK), lcd_abort_job, ui.goto_previous_screen, PSTR(MSG_STOP_PRINT), nullptr, PSTR("?"));
   }
 
 #endif // MACHINE_CAN_STOP
@@ -189,10 +190,10 @@ void menu_main() {
       }
       else {
         #if PIN_EXISTS(SD_DETECT)
-          MENU_ITEM(function, MSG_NO_CARD, NULL);
+          MENU_ITEM(function, MSG_NO_CARD, nullptr);
         #else
           MENU_ITEM(gcode, MSG_INIT_SDCARD, PSTR("M21"));
-          MENU_ITEM(function, MSG_SD_RELEASED, NULL);
+          MENU_ITEM(function, MSG_SD_RELEASED, nullptr);
         #endif
       }
     #endif // !HAS_ENCODER_WHEEL && SDSUPPORT
@@ -276,10 +277,10 @@ void menu_main() {
     }
     else {
       #if PIN_EXISTS(SD_DETECT)
-        MENU_ITEM(function, MSG_NO_CARD, NULL);
+        MENU_ITEM(function, MSG_NO_CARD, nullptr);
       #else
         MENU_ITEM(gcode, MSG_INIT_SDCARD, PSTR("M21"));
-        MENU_ITEM(function, MSG_SD_RELEASED, NULL);
+        MENU_ITEM(function, MSG_SD_RELEASED, nullptr);
       #endif
     }
   #endif // HAS_ENCODER_WHEEL && SDSUPPORT
