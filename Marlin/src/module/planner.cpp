@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -65,7 +65,7 @@
 #include "planner.h"
 #include "stepper.h"
 #include "motion.h"
-#include "../module/temperature.h"
+#include "temperature.h"
 #include "../lcd/ultralcd.h"
 #include "../core/language.h"
 #include "../gcode/parser.h"
@@ -90,6 +90,10 @@
 
 #if ENABLED(AUTO_POWER_CONTROL)
   #include "../feature/power.h"
+#endif
+
+#if ENABLED(BACKLASH_COMPENSATION)
+  #include "../feature/backlash.h"
 #endif
 
 // Delay for delivery of first block to the stepper ISR, if the queue contains 2 or
@@ -128,14 +132,14 @@ float Planner::steps_to_mm[XYZE_N];           // (mm) Millimeters per step
   #endif
 #endif
 #if HAS_CLASSIC_JERK
-  #if ENABLED(JUNCTION_DEVIATION) && ENABLED(LIN_ADVANCE)
+  #if BOTH(JUNCTION_DEVIATION, LIN_ADVANCE)
     float Planner::max_jerk[XYZ];             // (mm/s^2) M205 XYZ - The largest speed change requiring no acceleration.
   #else
     float Planner::max_jerk[XYZE];            // (mm/s^2) M205 XYZE - The largest speed change requiring no acceleration.
   #endif
 #endif
 
-#if ENABLED(ABORT_ON_ENDSTOP_HIT_FEATURE_ENABLED)
+#if ENABLED(SD_ABORT_ON_ENDSTOP_HIT)
   bool Planner::abort_on_endstop_hit = false;
 #endif
 
@@ -896,7 +900,7 @@ void Planner::reverse_pass() {
   // Reverse Pass: Coarsely maximize all possible deceleration curves back-planning from the last
   // block in buffer. Cease planning when the last optimal planned or tail pointer is reached.
   // NOTE: Forward pass will later refine and correct the reverse pass to create an optimal plan.
-  const block_t *next = NULL;
+  const block_t *next = nullptr;
   while (block_index != planned_block_index) {
 
     // Perform the reverse pass
@@ -991,7 +995,7 @@ void Planner::forward_pass() {
   uint8_t block_index = block_buffer_planned;
 
   block_t *current;
-  const block_t * previous = NULL;
+  const block_t * previous = nullptr;
   while (block_index != block_buffer_head) {
 
     // Perform the forward pass
@@ -1041,7 +1045,7 @@ void Planner::recalculate_trapezoids() {
   }
 
   // Go from the tail (currently executed block) to the first block, without including it)
-  block_t *current = NULL, *next = NULL;
+  block_t *current = nullptr, *next = nullptr;
   float current_entry_speed = 0.0, next_entry_speed = 0.0;
   while (block_index != head_block_index) {
 
@@ -1264,6 +1268,7 @@ void Planner::check_axes_activity() {
     #endif
 
     #if ENABLED(FAN_SOFT_PWM)
+
       #if HAS_FAN0
         thermalManager.soft_pwm_amount_fan[0] = CALC_FAN_SPEED(0);
       #endif
@@ -1273,18 +1278,33 @@ void Planner::check_axes_activity() {
       #if HAS_FAN2
         thermalManager.soft_pwm_amount_fan[2] = CALC_FAN_SPEED(2);
       #endif
-    #else
+
+    #elif ENABLED(FAST_PWM_FAN)
+
       #if HAS_FAN0
-        analogWrite(FAN_PIN, CALC_FAN_SPEED(0));
+        set_pwm_duty(FAN_PIN, CALC_FAN_SPEED(0));
       #endif
       #if HAS_FAN1
-        analogWrite(FAN1_PIN, CALC_FAN_SPEED(1));
+        set_pwm_duty(FAN1_PIN, CALC_FAN_SPEED(1));
       #endif
       #if HAS_FAN2
-        analogWrite(FAN2_PIN, CALC_FAN_SPEED(2));
+        set_pwm_duty(FAN2_PIN, CALC_FAN_SPEED(2));
+      #endif
+
+    #else
+
+      #if HAS_FAN0
+        analogWrite(pin_t(FAN_PIN), CALC_FAN_SPEED(0));
+      #endif
+      #if HAS_FAN1
+        analogWrite(pin_t(FAN1_PIN), CALC_FAN_SPEED(1));
+      #endif
+      #if HAS_FAN2
+        analogWrite(pin_t(FAN2_PIN), CALC_FAN_SPEED(2));
       #endif
     #endif
-
+  #else
+    UNUSED(tail_fan_speed);
   #endif // FAN_COUNT > 0
 
   #if ENABLED(AUTOTEMP)
@@ -1540,95 +1560,10 @@ void Planner::synchronize() {
   while (
     has_blocks_queued() || cleaning_buffer_counter
     #if ENABLED(EXTERNAL_CLOSED_LOOP_CONTROLLER)
-      || !READ(CLOSED_LOOP_MOVE_COMPLETE_PIN)
+      || (READ(CLOSED_LOOP_ENABLE_PIN) && !READ(CLOSED_LOOP_MOVE_COMPLETE_PIN))
     #endif
   ) idle();
 }
-
-/**
- * The following implements axis backlash correction. To minimize seams
- * on the printed part, the backlash correction only adds steps to the
- * current segment (instead of creating a new segment, which causes
- * discontinuities and print artifacts).
- *
- * When BACKLASH_SMOOTHING_MM is enabled and non-zero, the backlash
- * correction is spread over multiple segments, smoothing out print
- * artifacts even more.
- */
-#if ENABLED(BACKLASH_COMPENSATION)
-  #if ENABLED(BACKLASH_GCODE)
-    extern float backlash_distance_mm[], backlash_correction;
-    #ifdef BACKLASH_SMOOTHING_MM
-      extern float backlash_smoothing_mm;
-    #endif
-  #else
-    constexpr float backlash_distance_mm[XYZ] = BACKLASH_DISTANCE_MM,
-                    backlash_correction = BACKLASH_CORRECTION;
-    #ifdef BACKLASH_SMOOTHING_MM
-      constexpr float backlash_smoothing_mm = BACKLASH_SMOOTHING_MM;
-    #endif
-  #endif
-
-  void Planner::add_backlash_correction_steps(const int32_t da, const int32_t db, const int32_t dc, const uint8_t dm, block_t * const block) {
-    static uint8_t last_direction_bits;
-    uint8_t changed_dir = last_direction_bits ^ dm;
-    // Ignore direction change if no steps are taken in that direction
-    if (da == 0) CBI(changed_dir, X_AXIS);
-    if (db == 0) CBI(changed_dir, Y_AXIS);
-    if (dc == 0) CBI(changed_dir, Z_AXIS);
-    last_direction_bits ^= changed_dir;
-
-    if (backlash_correction == 0) return;
-
-    #ifdef BACKLASH_SMOOTHING_MM
-      // The segment proportion is a value greater than 0.0 indicating how much residual_error
-      // is corrected for in this segment. The contribution is based on segment length and the
-      // smoothing distance. Since the computation of this proportion involves a floating point
-      // division, defer computation until needed.
-      float segment_proportion = 0;
-
-      // Residual error carried forward across multiple segments, so correction can be applied
-      // to segments where there is no direction change.
-      static int32_t residual_error[XYZ] = { 0 };
-    #else
-      // No leftover residual error from segment to segment
-      int32_t residual_error[XYZ] = { 0 };
-      // No direction change, no correction.
-      if (!changed_dir) return;
-    #endif
-
-    LOOP_XYZ(axis) {
-      if (backlash_distance_mm[axis]) {
-        const bool reversing = TEST(dm,axis);
-
-        // When an axis changes direction, add axis backlash to the residual error
-        if (TEST(changed_dir, axis))
-          residual_error[axis] += backlash_correction * (reversing ? -1.0f : 1.0f) * backlash_distance_mm[axis] * planner.settings.axis_steps_per_mm[axis];
-
-        // Decide how much of the residual error to correct in this segment
-        int32_t error_correction = residual_error[axis];
-        #ifdef BACKLASH_SMOOTHING_MM
-          if (error_correction && backlash_smoothing_mm != 0) {
-            // Take up a portion of the residual_error in this segment, but only when
-            // the current segment travels in the same direction as the correction
-            if (reversing == (error_correction < 0)) {
-              if (segment_proportion == 0)
-                segment_proportion = MIN(1.0f, block->millimeters / backlash_smoothing_mm);
-              error_correction *= segment_proportion;
-            }
-            else
-              error_correction = 0; // Don't take up any backlash in this segment, as it would subtract steps
-          }
-        #endif
-        // Making a correction reduces the residual error and modifies delta_mm
-        if (error_correction) {
-          block->steps[axis] += ABS(error_correction);
-          residual_error[axis] -= error_correction;
-        }
-      }
-    }
-  }
-#endif // BACKLASH_COMPENSATION
 
 /**
  * Planner::_buffer_steps
@@ -1736,7 +1671,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
     SERIAL_ECHOLNPGM(" steps)");
   //*/
 
-  #if ENABLED(PREVENT_COLD_EXTRUSION) || ENABLED(PREVENT_LENGTHY_EXTRUDE)
+  #if EITHER(PREVENT_COLD_EXTRUSION, PREVENT_LENGTHY_EXTRUDE)
     if (de) {
       #if ENABLED(PREVENT_COLD_EXTRUSION)
         if (thermalManager.tooColdToExtrude(extruder)) {
@@ -1749,13 +1684,26 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
         }
       #endif // PREVENT_COLD_EXTRUSION
       #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
-        if (ABS(de * e_factor[extruder]) > (int32_t)settings.axis_steps_per_mm[E_AXIS_N(extruder)] * (EXTRUDE_MAXLENGTH)) { // It's not important to get max. extrusion length in a precision < 1mm, so save some cycles and cast to int
-          position[E_AXIS] = target[E_AXIS]; // Behave as if the move really took place, but ignore E part
-          #if HAS_POSITION_FLOAT
-            position_float[E_AXIS] = target_float[E_AXIS];
+        const float e_steps = ABS(de * e_factor[extruder]);
+        const float max_e_steps = settings.axis_steps_per_mm[E_AXIS_N(extruder)] * (EXTRUDE_MAXLENGTH);
+        if (e_steps > max_e_steps) {
+          #if ENABLED(MIXING_EXTRUDER)
+            bool ignore_e = false;
+            float collector[MIXING_STEPPERS];
+            mixer.refresh_collector(1.0, mixer.get_current_vtool(), collector);
+            MIXER_STEPPER_LOOP(e)
+              if (e_steps * collector[e] > max_e_steps) { ignore_e = true; break; }
+          #else
+            constexpr bool ignore_e = true;
           #endif
-          de = 0; // no difference
-          SERIAL_ECHO_MSG(MSG_ERR_LONG_EXTRUDE_STOP);
+          if (ignore_e) {
+            position[E_AXIS] = target[E_AXIS]; // Behave as if the move really took place, but ignore E part
+            #if HAS_POSITION_FLOAT
+              position_float[E_AXIS] = target_float[E_AXIS];
+            #endif
+            de = 0; // no difference
+            SERIAL_ECHO_MSG(MSG_ERR_LONG_EXTRUDE_STOP);
+          }
         }
       #endif // PREVENT_LENGTHY_EXTRUDE
     }
@@ -1888,7 +1836,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
      * should *never* remove steps!
      */
     #if ENABLED(BACKLASH_COMPENSATION)
-      add_backlash_correction_steps(da, db, dc, dm, block);
+      backlash.add_correction_steps(da, db, dc, dm, block);
     #endif
   }
 
@@ -1981,7 +1929,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
           #endif // EXTRUDERS > 1
           enable_E0();
           g_uc_extruder_last_move[0] = (BLOCK_BUFFER_SIZE) * 2;
-          #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
+          #if HAS_DUPLICATION_MODE
             if (extruder_duplication_enabled) {
               enable_E1();
               g_uc_extruder_last_move[1] = (BLOCK_BUFFER_SIZE) * 2;
@@ -2089,7 +2037,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   const uint8_t moves_queued = nonbusy_movesplanned();
 
   // Slow down when the buffer starts to empty, rather than wait at the corner for a buffer refill
-  #if ENABLED(SLOWDOWN) || ENABLED(ULTRA_LCD) || defined(XY_FREQUENCY_LIMIT)
+  #if EITHER(SLOWDOWN, ULTRA_LCD) || defined(XY_FREQUENCY_LIMIT)
     // Segment time im micro seconds
     uint32_t segment_time_us = LROUND(1000000.0f / inverse_secs);
   #endif
@@ -2157,11 +2105,11 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   // Calculate and limit speed in mm/sec for each axis
   float current_speed[NUM_AXIS], speed_factor = 1.0f; // factor <1 decreases speed
   LOOP_XYZE(i) {
-    #if ENABLED(MIXING_EXTRUDER) && ENABLED(RETRACT_SYNC_MIXING)
+    #if BOTH(MIXING_EXTRUDER, RETRACT_SYNC_MIXING)
       // In worst case, only one extruder running, no change is needed.
       // In best case, all extruders run the same amount, we can divide by MIXING_STEPPERS
       float delta_mm_i = 0;
-      if (i == E_AXIS && mixer.get_current_v_tool() == MIXER_AUTORETRACT_TOOL)
+      if (i == E_AXIS && mixer.get_current_vtool() == MIXER_AUTORETRACT_TOOL)
         delta_mm_i = delta_mm[i] / MIXING_STEPPERS;
       else
         delta_mm_i = delta_mm[i];
@@ -2470,7 +2418,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
     float safe_speed = nominal_speed;
 
     uint8_t limited = 0;
-    #if ENABLED(JUNCTION_DEVIATION) && ENABLED(LIN_ADVANCE)
+    #if BOTH(JUNCTION_DEVIATION, LIN_ADVANCE)
       LOOP_XYZ(i)
     #else
       LOOP_XYZE(i)
@@ -2507,7 +2455,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
 
       // Now limit the jerk in all axes.
       const float smaller_speed_factor = vmax_junction / previous_nominal_speed;
-      #if ENABLED(JUNCTION_DEVIATION) && ENABLED(LIN_ADVANCE)
+      #if BOTH(JUNCTION_DEVIATION, LIN_ADVANCE)
         LOOP_XYZ(axis)
       #else
         LOOP_XYZE(axis)
@@ -2582,6 +2530,10 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   COPY(position, target);
   #if HAS_POSITION_FLOAT
     COPY(position_float, target_float);
+  #endif
+
+  #if ENABLED(GRADIENT_MIX)
+    mixer.gradient_control(target_float[Z_AXIS]);
   #endif
 
   // Movement was accepted
@@ -2874,7 +2826,7 @@ void Planner::reset_acceleration_rates() {
     if (AXIS_CONDITION) NOLESS(highest_rate, max_acceleration_steps_per_s2[i]);
   }
   cutoff_long = 4294967295UL / highest_rate; // 0xFFFFFFFFUL
-  #if ENABLED(JUNCTION_DEVIATION) && ENABLED(LIN_ADVANCE)
+  #if BOTH(JUNCTION_DEVIATION, LIN_ADVANCE)
     recalculate_max_e_jerk();
   #endif
 }

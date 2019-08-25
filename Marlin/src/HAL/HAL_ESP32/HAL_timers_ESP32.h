@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -28,6 +28,11 @@
 #include <stdint.h>
 #include "driver/timer.h"
 
+// Includes needed to get I2S_STEPPER_STREAM. Note that pins.h
+// is included in case this header is being included early.
+#include "../../inc/MarlinConfig.h"
+#include "../../pins/pins.h"
+
 // --------------------------------------------------------------------------
 // Defines
 // --------------------------------------------------------------------------
@@ -43,9 +48,15 @@ typedef uint64_t hal_timer_t;
 
 #define HAL_TIMER_RATE APB_CLK_FREQ // frequency of timer peripherals
 
-#define STEPPER_TIMER_PRESCALE     40
-#define STEPPER_TIMER_RATE         (HAL_TIMER_RATE / STEPPER_TIMER_PRESCALE) // frequency of stepper timer, 2MHz
-#define STEPPER_TIMER_TICKS_PER_US ((STEPPER_TIMER_RATE) / 1000000)          // stepper timer ticks per µs
+#if ENABLED(I2S_STEPPER_STREAM)
+  #define STEPPER_TIMER_PRESCALE     1
+  #define STEPPER_TIMER_RATE         250000                           // 250khz, 4us pulses of i2s word clock
+  #define STEPPER_TIMER_TICKS_PER_US ((STEPPER_TIMER_RATE) / 1000000) // stepper timer ticks per µs // wrong would be 0.25
+#else
+  #define STEPPER_TIMER_PRESCALE     40
+  #define STEPPER_TIMER_RATE         (HAL_TIMER_RATE / STEPPER_TIMER_PRESCALE) // frequency of stepper timer, 2MHz
+  #define STEPPER_TIMER_TICKS_PER_US ((STEPPER_TIMER_RATE) / 1000000)          // stepper timer ticks per µs
+#endif
 
 #define STEP_TIMER_MIN_INTERVAL   8 // minimum time in µs between stepper interrupts
 
@@ -63,8 +74,8 @@ typedef uint64_t hal_timer_t;
 #define ENABLE_TEMPERATURE_INTERRUPT()  HAL_timer_enable_interrupt(TEMP_TIMER_NUM)
 #define DISABLE_TEMPERATURE_INTERRUPT() HAL_timer_disable_interrupt(TEMP_TIMER_NUM)
 
-#define HAL_TEMP_TIMER_ISR extern "C" void tempTC_Handler(void)
-#define HAL_STEP_TIMER_ISR extern "C" void stepTC_Handler(void)
+#define HAL_TEMP_TIMER_ISR() extern "C" void tempTC_Handler(void)
+#define HAL_STEP_TIMER_ISR() extern "C" void stepTC_Handler(void)
 
 extern "C" void tempTC_Handler(void);
 extern "C" void stepTC_Handler(void);

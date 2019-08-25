@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -34,7 +34,7 @@
 #include "watchdog_STM32F1.h"
 
 void watchdog_reset() {
-  #if PIN_EXISTS(LED)
+  #if DISABLED(PINS_DEBUGGING) && PIN_EXISTS(LED)
     TOGGLE(LED_PIN);  // heartbeat indicator
   #endif
   iwdg_feed();

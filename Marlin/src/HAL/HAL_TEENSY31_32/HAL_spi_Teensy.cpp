@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -38,14 +38,12 @@ void spiBegin(void) {
   #if !PIN_EXISTS(SS)
     #error "SS_PIN not defined!"
   #endif
-  SET_OUTPUT(SS_PIN);
-  WRITE(SS_PIN, HIGH);
+  OUT_WRITE(SS_PIN, HIGH);
   SET_OUTPUT(SCK_PIN);
   SET_INPUT(MISO_PIN);
   SET_OUTPUT(MOSI_PIN);
 
-  //#if DISABLED(SOFTWARE_SPI)
-  #if 0
+  #if 0 && DISABLED(SOFTWARE_SPI)
     // set SS high - may be chip select for another SPI device
     #if SET_SPI_SS_HIGH
       WRITE(SS_PIN, HIGH);

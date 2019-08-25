@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -75,16 +75,16 @@
 #endif
 
 typedef enum {
-  #if ENABLED(_useTimer1)
+  #ifdef _useTimer1
     _timer1,
   #endif
-  #if ENABLED(_useTimer3)
+  #ifdef _useTimer3
     _timer3,
   #endif
-  #if ENABLED(_useTimer4)
+  #ifdef _useTimer4
     _timer4,
   #endif
-  #if ENABLED(_useTimer5)
+  #ifdef _useTimer5
     _timer5,
   #endif
   _Nbr_16timers

@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#include "src/core/macros.h"
+#include "../../core/macros.h"
 
 #if ENABLED(SDSUPPORT) && HAS_GRAPHICAL_LCD && (LCD_PINS_D4 == SCK_PIN || LCD_PINS_ENABLE == MOSI_PIN || DOGLCD_SCK == SCK_PIN || DOGLCD_MOSI == MOSI_PIN)
   #define LPC_SOFTWARE_SPI  // If the SD card and LCD adapter share the same SPI pins, then software SPI is currently

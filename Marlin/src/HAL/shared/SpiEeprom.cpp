@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -115,5 +115,4 @@ void eeprom_update_block(const void* src, void* eeprom_address, size_t n) {
   delay(7);   // wait for page write to complete
 }
 
-
-#endif // ENABLED(SPI_EEPROM)
+#endif // SPI_EEPROM

@@ -196,6 +196,7 @@ else ifeq ($(HARDWARE_MOTHERBOARD),7)
 # Ultimaker (Older electronics. Pre 1.5.4. This is rare)
 else ifeq ($(HARDWARE_MOTHERBOARD),71)
   MCU ?= atmega1280
+
 # Azteeg X3
 else ifeq ($(HARDWARE_MOTHERBOARD),67)
 # Azteeg X3 Pro
@@ -206,6 +207,8 @@ else ifeq ($(HARDWARE_MOTHERBOARD),72)
 else ifeq ($(HARDWARE_MOTHERBOARD),80)
 # Raise3D Rumba
 else ifeq ($(HARDWARE_MOTHERBOARD),333)
+# Rapide Lite RL200 Rumba
+else ifeq ($(HARDWARE_MOTHERBOARD),801)
 # Formbot T-Rex 2 Plus
 else ifeq ($(HARDWARE_MOTHERBOARD),95)
 # Formbot T-Rex 3
@@ -222,16 +225,24 @@ else ifeq ($(HARDWARE_MOTHERBOARD),431)
 else ifeq ($(HARDWARE_MOTHERBOARD),343)
 # TriGorilla Anycubic version 1.4 based on RAMPS EFB
 else ifeq ($(HARDWARE_MOTHERBOARD),443)
+# TriGorilla Anycubic version 1.4 Rev 1.1
+else ifeq ($(HARDWARE_MOTHERBOARD),444)
 # Creality: Ender-4, CR-8
 else ifeq ($(HARDWARE_MOTHERBOARD),243)
 # Creality: CR10S, CR20, CR-X
 else ifeq ($(HARDWARE_MOTHERBOARD),244)
+# Dagoma F5
+else ifeq ($(HARDWARE_MOTHERBOARD),245)
 # Fysetc F6
 else ifeq ($(HARDWARE_MOTHERBOARD),541)
 # Duplicator i3 Plus
 else ifeq ($(HARDWARE_MOTHERBOARD),31)
 # VORON
 else ifeq ($(HARDWARE_MOTHERBOARD),441)
+# TRONXY V3 1.0
+else ifeq ($(HARDWARE_MOTHERBOARD),442)
+# Z-Bolt X Series
+else ifeq ($(HARDWARE_MOTHERBOARD),550)
 
 #
 # Other ATmega1280, ATmega2560
@@ -266,17 +277,25 @@ else ifeq ($(HARDWARE_MOTHERBOARD),304)
 # Einsy Retro
 else ifeq ($(HARDWARE_MOTHERBOARD),305)
 # Elefu Ra Board (v3)
-else ifeq ($(HARDWARE_MOTHERBOARD),21)
+else ifeq ($(HARDWARE_MOTHERBOARD),23)
 # Leapfrog
 else ifeq ($(HARDWARE_MOTHERBOARD),999)
 # Mega controller
 else ifeq ($(HARDWARE_MOTHERBOARD),310)
 # abee Scoovo X9H
 else ifeq ($(HARDWARE_MOTHERBOARD),321)
+# Geeetech GT2560 Rev B for Mecreator2
+else ifeq ($(HARDWARE_MOTHERBOARD),73)
 # Geeetech GT2560 Rev. A
 else ifeq ($(HARDWARE_MOTHERBOARD),74)
 # Geeetech GT2560 Rev. A+ (with auto level probe)
 else ifeq ($(HARDWARE_MOTHERBOARD),75)
+# Geeetech GT2560 Rev B for A10(M/D)
+else ifeq ($(HARDWARE_MOTHERBOARD),76)
+# Geeetech GT2560 Rev B for A20(M/D)
+else ifeq ($(HARDWARE_MOTHERBOARD),86)
+# Einstart retrofit
+else ifeq ($(HARDWARE_MOTHERBOARD),666)
 
 #
 # ATmega1281, ATmega2561
@@ -576,7 +595,7 @@ ifeq ($(U8GLIB), 1)
 endif
 
 ifeq ($(TMC), 1)
-  LIB_CXXSRC += TMCStepper.cpp COOLCONF.cpp DRV_STATUS.cpp IHOLD_IRUN.cpp CHOPCONF.cpp  GCONF.cpp PWMCONF.cpp DRV_CONF.cpp DRVCONF.cpp DRVCTRL.cpp DRVSTATUS.cpp ENCMODE.cpp  RAMP_STAT.cpp SGCSCONF.cpp SHORT_CONF.cpp SMARTEN.cpp SW_MODE.cpp SW_SPI.cpp TMC2130Stepper.cpp TMC2208Stepper.cpp TMC2660Stepper.cpp TMC5130Stepper.cpp TMC5160Stepper.cpp
+  LIB_CXXSRC += TMCStepper.cpp COOLCONF.cpp DRV_STATUS.cpp IHOLD_IRUN.cpp CHOPCONF.cpp GCONF.cpp PWMCONF.cpp DRV_CONF.cpp DRVCONF.cpp DRVCTRL.cpp DRVSTATUS.cpp ENCMODE.cpp RAMP_STAT.cpp SGCSCONF.cpp SHORT_CONF.cpp SMARTEN.cpp SW_MODE.cpp SW_SPI.cpp TMC2130Stepper.cpp TMC2208Stepper.cpp TMC2209Stepper.cpp TMC2660Stepper.cpp TMC5130Stepper.cpp TMC5160Stepper.cpp
 endif
 
 ifeq ($(RELOC_WORKAROUND), 1)
@@ -663,7 +682,7 @@ ASFLAGS :=          $(CDEFS)
 ifeq ($(HARDWARE_VARIANT), archim)
   LD_PREFIX = -Wl,--gc-sections,-Map,Marlin.ino.map,--cref,--check-sections,--entry=Reset_Handler,--unresolved-symbols=report-all,--warn-common,--warn-section-align
   LD_SUFFIX = $(LDLIBS)
-  LDFLAGS   = -lm -gcc -T$(LDSCRIPT) -u _sbrk -u link -u _close -u _fstat -u _isatty -u _lseek -u _read -u _write -u _exit -u kill -u _getpid
+  LDFLAGS   = -lm -T$(LDSCRIPT) -u _sbrk -u link -u _close -u _fstat -u _isatty -u _lseek -u _read -u _write -u _exit -u kill -u _getpid
 else
   LD_PREFIX = -Wl,--gc-sections,--relax
   LDFLAGS   = -lm
@@ -740,7 +759,7 @@ ifeq (${AVRDUDE_PROGRAMMER}, arduino)
 	stty -hup < $(UPLOAD_PORT); true
 endif
 
-  # Display size of file.
+# Display size of file.
 HEXSIZE = $(SIZE) --target=$(FORMAT) $(BUILD_DIR)/$(TARGET).hex
 ELFSIZE = $(SIZE)  $(SIZE_FLAGS) $(BUILD_DIR)/$(TARGET).elf; \
           $(SIZE)  $(BUILD_DIR)/$(TARGET).elf
@@ -790,7 +809,7 @@ extcoff: $(TARGET).elf
 .elf.sym:
 	$(NM) -n $< > $@
 
-  # Link: create ELF output file from library.
+# Link: create ELF output file from library.
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJ) Configuration.h
 	$(Pecho) "  CXX   $@"
