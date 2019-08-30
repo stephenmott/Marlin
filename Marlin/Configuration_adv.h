@@ -157,8 +157,8 @@
    * and/or decrease WATCH_TEMP_INCREASE. WATCH_TEMP_INCREASE should not be set
    * below 2.
    */
-  #define WATCH_TEMP_PERIOD 20                // Seconds
-  #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
+  #define WATCH_TEMP_PERIOD 60                // Seconds
+  #define WATCH_TEMP_INCREASE 1               // Degrees Celsius
 #endif
 
 /**
@@ -172,7 +172,9 @@
    * As described above, except for the bed (M140/M190/M303).
    */
   #define WATCH_BED_TEMP_PERIOD 60                // Seconds
-  #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
+  #define WATCH_BED_TEMP_INCREASE 1               // Degrees Celsius
+  #define MAX_CYCLE_TIME_PID_AUTOTUNE 40L
+
 #endif
 
 /**
@@ -635,7 +637,7 @@
 #define DEFAULT_STEPPER_DEACTIVE_TIME 120
 #define DISABLE_INACTIVE_X true
 #define DISABLE_INACTIVE_Y true
-#define DISABLE_INACTIVE_Z true  // Set to false if the nozzle will fall down on your printed part when print has finished.
+#define DISABLE_INACTIVE_Z false  // Set to false if the nozzle will fall down on your printed part when print has finished.
 #define DISABLE_INACTIVE_E true
 
 #define DEFAULT_MINIMUMFEEDRATE       0.0     // minimum feedrate
@@ -898,7 +900,7 @@
   // Note: This is always disabled for ULTIPANEL (except ELB_FULL_GRAPHIC_CONTROLLER).
   #define SD_DETECT_INVERTED
 
-  #define SD_FINISHED_STEPPERRELEASE true          // Disable steppers when SD Print is finished
+  #define SD_FINISHED_STEPPERRELEASE false          // Disable steppers when SD Print is finished
   #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the Z enabled so your bed stays in place.
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
@@ -1152,7 +1154,7 @@
  *
  * Warning: Does not respect endstops!
  */
-//#define BABYSTEPPING
+#define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
   //#define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
@@ -1467,7 +1469,7 @@
  * Requires NOZZLE_PARK_FEATURE.
  * This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
  */
-//#define ADVANCED_PAUSE_FEATURE
+#define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #define PAUSE_PARK_RETRACT_FEEDRATE         60  // (mm/s) Initial retract feedrate.
   #define PAUSE_PARK_RETRACT_LENGTH            2  // (mm) Initial retract.
@@ -1504,8 +1506,8 @@
   #define FILAMENT_CHANGE_ALERT_BEEPS         10  // Number of alert beeps to play when a response is needed.
   #define PAUSE_PARK_NO_STEPPER_TIMEOUT           // Enable for XYZ steppers to stay powered on during filament change.
 
-  //#define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
-  //#define HOME_BEFORE_FILAMENT_CHANGE           // Ensure homing has been completed prior to parking for filament change
+  #define PARK_HEAD_ON_PAUSE                    // Park the nozzle during pause and filament change.
+  #define HOME_BEFORE_FILAMENT_CHANGE           // Ensure homing has been completed prior to parking for filament change
 
   //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
   //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
@@ -1626,7 +1628,7 @@
 
   #if AXIS_IS_TMC(X)
     #define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_MICROSTEPS   16  // 0..256
+    #define X_MICROSTEPS  256  // 0..256
     #define X_RSENSE     0.11
   #endif
 
@@ -1638,7 +1640,7 @@
 
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT     800
-    #define Y_MICROSTEPS   16
+    #define Y_MICROSTEPS  256
     #define Y_RSENSE     0.11
   #endif
 
@@ -1649,8 +1651,8 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     800
-    #define Z_MICROSTEPS   16
+    #define Z_CURRENT     900
+    #define Z_MICROSTEPS  256
     #define Z_RSENSE     0.11
   #endif
 
@@ -1667,14 +1669,14 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT    800
-    #define E0_MICROSTEPS  16
+    #define E0_CURRENT   1000
+    #define E0_MICROSTEPS 16
     #define E0_RSENSE    0.11
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT    800
-    #define E1_MICROSTEPS  16
+    #define E1_CURRENT   1000
+    #define E1_MICROSTEPS 16
     #define E1_RSENSE    0.11
   #endif
 
@@ -1784,7 +1786,7 @@
    * Define you own with
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_12V
+  #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
 
   /**
    * Monitor Trinamic drivers for error conditions,
@@ -1812,7 +1814,7 @@
    * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
    * M913 X/Y/Z/E to live tune the setting
    */
-  //#define HYBRID_THRESHOLD
+  #define HYBRID_THRESHOLD
 
   #define X_HYBRID_THRESHOLD     100  // [mm/s]
   #define X2_HYBRID_THRESHOLD    100
