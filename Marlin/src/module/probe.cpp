@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,9 +38,7 @@
 #include "../gcode/gcode.h"
 #include "../lcd/ultralcd.h"
 
-#if ANY(Z_PROBE_SLED, Z_PROBE_ALLEN_KEY, PROBE_TRIGGERED_WHEN_STOWED_TEST) || (QUIET_PROBING && ENABLED(PROBING_STEPPERS_OFF))
-  #include "../Marlin.h" // for stop(), disable_e_steppers
-#endif
+#include "../Marlin.h" // for stop(), disable_e_steppers, wait_for_user
 
 #if HAS_LEVELING
   #include "../feature/bedlevel/bedlevel.h"
@@ -64,6 +62,10 @@ float zprobe_zoffset; // Initialized by settings.load()
   #include "../feature/bltouch.h"
 #endif
 
+#if ENABLED(HOST_PROMPT_SUPPORT)
+  #include "../feature/host_actions.h" // for PROMPT_USER_CONTINUE
+#endif
+
 #if HAS_Z_SERVO_PROBE
   #include "servo.h"
 #endif
@@ -75,6 +77,10 @@ float zprobe_zoffset; // Initialized by settings.load()
 
 #if QUIET_PROBING
   #include "stepper_indirection.h"
+#endif
+
+#if ENABLED(EXTENSIBLE_UI)
+  #include "../lcd/extensible_ui/ui_api.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -107,12 +113,30 @@ float zprobe_zoffset; // Initialized by settings.load()
 
   // Move to the magnet to unlock the probe
   void run_deploy_moves_script() {
-    #ifndef TOUCH_MI_DEPLOY_XPOS
-      #define TOUCH_MI_DEPLOY_XPOS 0
-    #elif X_HOME_DIR > 0 && TOUCH_MI_DEPLOY_XPOS > X_MAX_BED
+    #if TOUCH_MI_DEPLOY_XPOS > X_MAX_BED
       TemporaryGlobalEndstopsState unlock_x(false);
     #endif
-    do_blocking_move_to_x(TOUCH_MI_DEPLOY_XPOS);
+
+    #if ENABLED(TOUCH_MI_MANUAL_DEPLOY)
+
+      const screenFunc_t prev_screen = ui.currentScreen;
+      LCD_MESSAGEPGM(MSG_MANUAL_DEPLOY_TOUCHMI);
+      ui.return_to_status();
+
+      KEEPALIVE_STATE(PAUSED_FOR_USER);
+      wait_for_user = true; // LCD click or M108 will clear this
+      #if ENABLED(HOST_PROMPT_SUPPORT)
+        host_prompt_do(PROMPT_USER_CONTINUE, PSTR("Deploy TouchMI probe."), PSTR("Continue"));
+      #endif
+      while (wait_for_user) idle();
+      ui.reset_status();
+      ui.goto_screen(prev_screen);
+
+    #elif defined(TOUCH_MI_DEPLOY_XPOS)
+
+      do_blocking_move_to_x(TOUCH_MI_DEPLOY_XPOS);
+
+    #endif
   }
 
   // Move down to the bed to stow the probe
@@ -303,7 +327,7 @@ float zprobe_zoffset; // Initialized by settings.load()
     #endif
     #if ENABLED(PROBING_STEPPERS_OFF)
       disable_e_steppers();
-      #if DISABLED(DELTA, HOME_AFTER_DEACTIVATE)
+      #if NONE(DELTA, HOME_AFTER_DEACTIVATE)
         disable_X(); disable_Y();
       #endif
     #endif
@@ -353,9 +377,12 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
       #if ENABLED(HOST_PROMPT_SUPPORT)
         host_prompt_do(PROMPT_USER_CONTINUE, PSTR("Stow Probe"), PSTR("Continue"));
       #endif
+      #if ENABLED(EXTENSIBLE_UI)
+        ExtUI::onUserConfirmRequired(PSTR("Stow Probe"));
+      #endif
       while (wait_for_user) idle();
       ui.reset_status();
-      KEEPALIVE_STATE(IN_HANDLER);
+
     } while(
       #if ENABLED(PAUSE_PROBE_DEPLOY_WHEN_TRIGGERED)
         true
@@ -376,13 +403,15 @@ FORCE_INLINE void probe_specific_action(const bool deploy) {
 
     dock_sled(!deploy);
 
-  #elif ENABLED(BLTOUCH)
-
-    deploy ? bltouch.deploy() : bltouch.stow();
-
   #elif HAS_Z_SERVO_PROBE
 
-    MOVE_SERVO(Z_PROBE_SERVO_NR, servo_angles[Z_PROBE_SERVO_NR][deploy ? 0 : 1]);
+    #if DISABLED(BLTOUCH)
+      MOVE_SERVO(Z_PROBE_SERVO_NR, servo_angles[Z_PROBE_SERVO_NR][deploy ? 0 : 1]);
+    #elif ENABLED(BLTOUCH_HS_MODE)
+      // In HIGH SPEED MODE, use the normal retractable probe logic in this code
+      // i.e. no intermediate STOWs and DEPLOYs in between individual probe actions
+      if (deploy) bltouch.deploy(); else bltouch.stow();
+    #endif
 
   #elif EITHER(TOUCH_MI_PROBE, Z_PROBE_ALLEN_KEY)
 
@@ -426,7 +455,7 @@ bool set_probe_deployed(const bool deploy) {
   #endif
 
   if (deploy_stow_condition && unknown_condition)
-    do_probe_raise(MAX(Z_CLEARANCE_BETWEEN_PROBES, Z_CLEARANCE_DEPLOY_PROBE));
+    do_probe_raise(_MAX(Z_CLEARANCE_BETWEEN_PROBES, Z_CLEARANCE_DEPLOY_PROBE));
 
   #if EITHER(Z_PROBE_SLED, Z_PROBE_ALLEN_KEY)
     #if ENABLED(Z_PROBE_SLED)
@@ -445,12 +474,14 @@ bool set_probe_deployed(const bool deploy) {
               oldYpos = current_position[Y_AXIS];
 
   #if ENABLED(PROBE_TRIGGERED_WHEN_STOWED_TEST)
-
     #if USES_Z_MIN_PROBE_ENDSTOP
       #define PROBE_STOWED() (READ(Z_MIN_PROBE_PIN) != Z_MIN_PROBE_ENDSTOP_INVERTING)
     #else
       #define PROBE_STOWED() (READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING)
     #endif
+  #endif
+
+  #ifdef PROBE_STOWED
 
     // Only deploy/stow if needed
     if (PROBE_STOWED() == deploy) {
@@ -520,7 +551,7 @@ static bool do_probe_move(const float z, const float fr_mm_s) {
 
   // Disable stealthChop if used. Enable diag1 pin on driver.
   #if ENABLED(SENSORLESS_PROBING)
-    sensorless_t stealth_states { false, false, false, false, false, false, false };
+    sensorless_t stealth_states { false };
     #if ENABLED(DELTA)
       stealth_states.x = tmc_enable_stallguard(stepperX);
       stealth_states.y = tmc_enable_stallguard(stepperY);
@@ -760,7 +791,7 @@ float probe_pt(const float &rx, const float &ry, const ProbePtRaise raise_after/
   const float nz =
     #if ENABLED(DELTA)
       // Move below clip height or xy move will be aborted by do_blocking_move_to
-      MIN(current_position[Z_AXIS], delta_clip_start_height)
+      _MIN(current_position[Z_AXIS], delta_clip_start_height)
     #else
       current_position[Z_AXIS]
     #endif
