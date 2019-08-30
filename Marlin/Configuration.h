@@ -129,7 +129,6 @@
 #define MOTHERBOARD BOARD_BIGTREE_SKR_V1_3
 #endif
 
-<<<<<<< HEAD
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
 #define CUSTOM_MACHINE_NAME "Cetus3D"
@@ -137,14 +136,6 @@
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
 #define MACHINE_UUID "c4279ed4-c44d-421a-a834-865d7ed395c5"
-=======
-// Name displayed in the LCD "Ready" message and Info menu
-//#define CUSTOM_MACHINE_NAME "3D Printer"
-
-// Printer's unique ID, used by some programs to differentiate between machines.
-// Choose your own or use a service like http://www.uuidgenerator.net/version4
-//#define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
->>>>>>> MarlinFirmware/dev-2.1.x
 
 // @section extruder
 
