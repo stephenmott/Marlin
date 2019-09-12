@@ -649,7 +649,6 @@
 #endif
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
-<<<<<<< HEAD
 #define X_MIN_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
@@ -657,15 +656,6 @@
 #define Y_MAX_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 #define Z_MIN_PROBE_ENDSTOP_INVERTING true // set to true to invert the logic of the probe.
-=======
-#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Z_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING false // Set to true to invert the logic of the probe.
->>>>>>> MarlinFirmware/bugfix-2.0.x
 
 /**
  * Stepper Drivers
@@ -771,12 +761,6 @@
 #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
 
-<<<<<<< HEAD
-//
-// Use Junction Deviation instead of traditional Jerk Limiting
-//
-#define JUNCTION_DEVIATION
-=======
 /**
  * Junction Deviation
  *
@@ -786,8 +770,8 @@
  *   https://reprap.org/forum/read.php?1,739819
  *   http://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
  */
-//#define JUNCTION_DEVIATION
->>>>>>> MarlinFirmware/bugfix-2.0.x
+#define JUNCTION_DEVIATION
+
 #if ENABLED(JUNCTION_DEVIATION)
   #define JUNCTION_DEVIATION_MM 0.02  // (mm) Distance from real junction edge
 #endif
@@ -957,12 +941,6 @@
 // Feedrate (mm/m) for the "accurate" probe of each point
 #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
 
-<<<<<<< HEAD
-// The number of probes to perform at each point.
-//   Set to 2 for a fast/slow probe, using the second probe result.
-//   Set to 3 or more for slow probes, averaging the results.
-#define MULTIPLE_PROBING 2
-=======
 /**
  * Multiple Probing
  *
@@ -972,9 +950,8 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-//#define MULTIPLE_PROBING 2
-//#define EXTRA_PROBING    1
->>>>>>> MarlinFirmware/bugfix-2.0.x
+#define MULTIPLE_PROBING 2
+#define EXTRA_PROBING    1
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1569,13 +1546,8 @@
   #define NOZZLE_CLEAN_TRIANGLES  3
 
   // Specify positions as { X, Y, Z }
-<<<<<<< HEAD
   #define NOZZLE_CLEAN_START_POINT { 50, 0, 2}
   #define NOZZLE_CLEAN_END_POINT   {128, 5, 2}
-=======
-  #define NOZZLE_CLEAN_START_POINT {  30, 30, (Z_MIN_POS + 1) }
-  #define NOZZLE_CLEAN_END_POINT   { 100, 60, (Z_MIN_POS + 1) }
->>>>>>> MarlinFirmware/bugfix-2.0.x
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 5

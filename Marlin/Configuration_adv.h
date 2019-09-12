@@ -375,16 +375,12 @@
  */
 #define CASE_LIGHT_ENABLE
 #if ENABLED(CASE_LIGHT_ENABLE)
-  #define CASE_LIGHT_PIN 11                  // Override the default pin if needed
-  #define INVERT_CASE_LIGHT true             // Set true if Case Light is ON when pin is LOW
+  #define CASE_LIGHT_PIN 12                  // Override the default pin if needed
+  #define INVERT_CASE_LIGHT false             // Set true if Case Light is ON when pin is LOW
   #define CASE_LIGHT_DEFAULT_ON false          // Set default power-up state on
   #define CASE_LIGHT_DEFAULT_BRIGHTNESS 105   // Set default power-up brightness (0-255, requires PWM pin)
-<<<<<<< HEAD
-  #define MENU_ITEM_CASE_LIGHT              // Add a Case Light option to the LCD main menu
-=======
-  //#define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
+  #define CASE_LIGHT_MENU                   // Add Case Light options to the LCD menu
   //#define CASE_LIGHT_NO_BRIGHTNESS          // Disable brightness control. Enable for non-PWM lighting.
->>>>>>> MarlinFirmware/bugfix-2.0.x
   //#define CASE_LIGHT_USE_NEOPIXEL           // Use Neopixel LED as case light, requires NEOPIXEL_LED.
   #if ENABLED(CASE_LIGHT_USE_NEOPIXEL)
     #define CASE_LIGHT_NEOPIXEL_COLOR { 255, 255, 255, 255 } // { Red, Green, Blue, White }
@@ -851,10 +847,9 @@
   #define FEEDRATE_CHANGE_BEEP_FREQUENCY 440
 #endif
 
-<<<<<<< HEAD
 // Include a page of printer information in the LCD Main Menu
 #define LCD_INFO_MENU
-=======
+
 #if HAS_LCD_MENU
 
   // Include a page of printer information in the LCD Main Menu
@@ -884,7 +879,6 @@
   #endif
 
 #endif // HAS_LCD_MENU
->>>>>>> MarlinFirmware/bugfix-2.0.x
 
 // Scroll a longer status message into view
 #define STATUS_MESSAGE_SCROLLING
