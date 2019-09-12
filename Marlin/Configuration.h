@@ -673,8 +673,8 @@
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE DRV8825
-#define E1_DRIVER_TYPE DRV8825
+#define E0_DRIVER_TYPE TMC2208
+//#define E1_DRIVER_TYPE DRV8825
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
 //#define E4_DRIVER_TYPE A4988
@@ -727,7 +727,7 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 1280, 1000 }
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 3000 } // E3D
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 1080 } // BTech
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 640 } // Prusa
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 290 } // Prusa
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -918,7 +918,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER -40  // X offset: -left  +right  [of the nozzle]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -0.50  // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -3.25  // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1024,7 +1024,7 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true
+#define INVERT_E0_DIR false
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -1692,7 +1692,7 @@
 //
 //  Set this option if CLOCKWISE causes values to DECREASE
 //
-//#define REVERSE_ENCODER_DIRECTION
+#define REVERSE_ENCODER_DIRECTION
 
 //
 // This option reverses the encoder direction for navigating LCD menus.
@@ -1700,7 +1700,7 @@
 //  If CLOCKWISE normally moves DOWN this makes it go UP.
 //  If CLOCKWISE normally moves UP this makes it go DOWN.
 //
-//#define REVERSE_MENU_DIRECTION
+#define REVERSE_MENU_DIRECTION
 
 //
 // This option reverses the encoder direction for Select Screen.
