@@ -134,11 +134,11 @@
 
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
-#define CUSTOM_MACHINE_NAME "Cetus3D"
+#define CUSTOM_MACHINE_NAME "Tazish"
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
-#define MACHINE_UUID "c4279ed4-c44d-421a-a834-865d7ed395c5"
+#define MACHINE_UUID "05c06873-104a-4c7a-b984-07bd8821efaa"
 
 // @section extruder
 
@@ -730,7 +730,7 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 1280, 1000 }
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 3000 } // E3D
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 1080 } // BTech
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 290 } // Prusa
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 292 } // Prusa
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -919,8 +919,8 @@
  *     O-- FRONT --+
  *   (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER -40  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 0  // Y offset: -front +behind [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER -20  // X offset: -left  +right  [of the nozzle]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER -15  // Y offset: -front +behind [the nozzle]
 #define Z_PROBE_OFFSET_FROM_EXTRUDER -3.25  // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
@@ -1046,22 +1046,22 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
-#define Y_HOME_DIR 1
-#define Z_HOME_DIR 1
+#define Y_HOME_DIR -1
+#define Z_HOME_DIR -1
 
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 180
-#define Y_BED_SIZE 170
+#define X_BED_SIZE 270
+#define Y_BED_SIZE 230
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define Y_MIN_POS 42
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 155
+#define Z_MAX_POS 270
 
 /**
  * Software Endstops
