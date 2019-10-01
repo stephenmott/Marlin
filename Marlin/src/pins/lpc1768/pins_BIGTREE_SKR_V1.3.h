@@ -39,7 +39,7 @@
 // Limit Switches
 //
 #define X_MIN_PIN          P1_29
-#define X_MAX_PIN          P1_28
+//#define X_MAX_PIN          P1_28
 #define Y_MIN_PIN          P1_27
 #define Y_MAX_PIN          P1_26
 #define Z_MIN_PIN          P1_25
@@ -242,7 +242,14 @@
       #if ENABLED(MKS_MINI_12864)
         #define DOGLCD_CS  P1_21
         #define DOGLCD_A0  P1_22
+        #define LCD_PINS_DC DOGLCD_A0 
       #endif
+
+      // #if EITHER(MKS_12864OLED,MKS_12864OLED_SSD1306)
+      //   #define DOGLCD_CS  P1_21
+      //   #define DOGLCD_A0  P1_22
+      //   #define LCD_PINS_DC DOGLCD_A0 
+      // #endif
 
       #if ENABLED(ULTIPANEL)
         #define LCD_PINS_D5 P1_21
