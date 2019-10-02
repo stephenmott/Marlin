@@ -1765,7 +1765,7 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     900
+    #define Z_CURRENT     1100
     #define Z_MICROSTEPS  32
     #define Z_RSENSE     0.11
     #define Z_CHAIN_POS     0
