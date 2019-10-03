@@ -479,9 +479,9 @@
   //#define DEFAULT_Ki 1.08
   //#define DEFAULT_Kd 114
 
-  #define DEFAULT_Kp 16.76
-  #define DEFAULT_Ki 1.92
-  #define DEFAULT_Kd 36.57
+  #define DEFAULT_Kp 22.41
+  #define DEFAULT_Ki 1.81
+  #define DEFAULT_Kd 69.54
 
   // MakerGear
   //#define DEFAULT_Kp 7.0
@@ -613,10 +613,10 @@
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
-#define USE_YMIN_PLUG
+//#define USE_YMIN_PLUG
 #define USE_ZMIN_PLUG
 //#define USE_XMAX_PLUG
-//#define USE_YMAX_PLUG
+#define USE_YMAX_PLUG
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
@@ -730,14 +730,14 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 1280, 1000 }
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 3000 } // E3D
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 1080 } // BTech
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 292 } // Prusa
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 150 } // Prusa
 
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 360, 360, 200, 150 }
+#define DEFAULT_MAX_FEEDRATE          { 360, 360, 100, 150 }
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -919,9 +919,9 @@
  *     O-- FRONT --+
  *   (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER -20  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER -5  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -3.25  // Z offset: -below +above  [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER 20.0  // X offset: -left  +right  [of the nozzle]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER -5.0  // Y offset: -front +behind [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -7.5  // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1021,13 +1021,13 @@
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR true
-#define INVERT_Y_DIR true
+#define INVERT_Y_DIR false
 #define INVERT_Z_DIR false
 
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR false
+#define INVERT_E0_DIR true
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -1046,7 +1046,7 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
-#define Y_HOME_DIR -1
+#define Y_HOME_DIR 1
 #define Z_HOME_DIR -1
 
 // @section machine
@@ -1536,8 +1536,8 @@
   // Specify positions as { X, Y, Z }
   
   
-  #define NOZZLE_CLEAN_START_POINT { 6, 114, 4 }
-  #define NOZZLE_CLEAN_END_POINT   { 0, 155, 4 }
+  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
+  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
@@ -1697,7 +1697,7 @@
 //
 //  Set this option if CLOCKWISE causes values to DECREASE
 //
-#define REVERSE_ENCODER_DIRECTION
+// #define REVERSE_ENCODER_DIRECTION
 
 //
 // This option reverses the encoder direction for navigating LCD menus.
