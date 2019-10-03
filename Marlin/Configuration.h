@@ -535,9 +535,13 @@
   //#define DEFAULT_bedKi .023
   //#define DEFAULT_bedKd 305.4
 
-  #define DEFAULT_bedKp 58.24
-  #define DEFAULT_bedKi 1.82
-  #define DEFAULT_bedKd 1243.69
+  #define DEFAULT_bedKp 97.74
+  #define DEFAULT_bedKi 15.45
+  #define DEFAULT_bedKd 412.25
+
+  // #define DEFAULT_bedKp 58.24
+  // #define DEFAULT_bedKi 1.82
+  // #define DEFAULT_bedKd 1243.69
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -921,7 +925,7 @@
  */
 #define X_PROBE_OFFSET_FROM_EXTRUDER 20.0  // X offset: -left  +right  [of the nozzle]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER -5.0  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -7.5  // Z offset: -below +above  [the nozzle]
+#define Z_PROBE_OFFSET_FROM_EXTRUDER -7.25  // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
