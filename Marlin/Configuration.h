@@ -939,13 +939,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-<<<<<<< HEAD
-#define X_PROBE_OFFSET_FROM_EXTRUDER 20.0  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER -5.0  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER -1.25  // Z offset: -below +above  [the nozzle]
-=======
-#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
->>>>>>> bugfix-2.0.x
+#define NOZZLE_TO_PROBE_OFFSET { 20, -5, -2.15 }
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1710,7 +1704,7 @@
 //  If CLOCKWISE normally moves DOWN this makes it go UP.
 //  If CLOCKWISE normally moves UP this makes it go DOWN.
 //
-#define REVERSE_MENU_DIRECTION
+// #define REVERSE_MENU_DIRECTION
 
 //
 // This option reverses the encoder direction for Select Screen.
@@ -1718,7 +1712,7 @@
 //  If CLOCKWISE normally moves LEFT this makes it go RIGHT.
 //  If CLOCKWISE normally moves RIGHT this makes it go LEFT.
 //
-//#define REVERSE_SELECT_DIRECTION
+// #define REVERSE_SELECT_DIRECTION
 
 //
 // Individual Axis Homing
