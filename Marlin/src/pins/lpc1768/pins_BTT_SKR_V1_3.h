@@ -56,23 +56,9 @@
 //
 // Servos
 //
-<<<<<<< HEAD:Marlin/src/pins/lpc1768/pins_BIGTREE_SKR_V1.3.h
-#define SERVO0_PIN         P2_00
-
-//
-// Limit Switches
-//
-#define X_MIN_PIN          P1_29
-//#define X_MAX_PIN          P1_28
-#define Y_MIN_PIN          P1_27
-#define Y_MAX_PIN          P1_26
-#define Z_MIN_PIN          P1_25
-#define Z_MAX_PIN          P1_24
-=======
 #ifndef SERVO0_PIN
   #define SERVO0_PIN       P2_00
 #endif
->>>>>>> MarlinFirmware/2.0.x:Marlin/src/pins/lpc1768/pins_BTT_SKR_V1_3.h
 
 //
 // Z Probe (when not Z_MIN_PIN)
