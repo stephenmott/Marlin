@@ -779,25 +779,7 @@
 #define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
 
 /**
-<<<<<<< HEAD
- * Junction Deviation
- *
- * Use Junction Deviation instead of traditional Jerk Limiting
- *
- * See:
- *   https://reprap.org/forum/read.php?1,739819
- *   http://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
- */
-#define JUNCTION_DEVIATION
-#if ENABLED(JUNCTION_DEVIATION)
-  #define JUNCTION_DEVIATION_MM 0.02  // (mm) Distance from real junction edge
-#endif
-
-/**
- * Default Jerk (mm/s)
-=======
  * Default Jerk limits (mm/s)
->>>>>>> MarlinFirmware/2.0.x
  * Override with M205 X Y Z E
  *
  * "Jerk" specifies the minimum speed change that requires acceleration.
@@ -960,13 +942,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-<<<<<<< HEAD
-#define X_PROBE_OFFSET_FROM_EXTRUDER 0  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER 70  // Y offset: -front +behind [the nozzle]
-#define Z_PROBE_OFFSET_FROM_EXTRUDER 0.0   // Z offset: -below +above  [the nozzle]
-=======
-#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
->>>>>>> MarlinFirmware/2.0.x
+#define NOZZLE_TO_PROBE_OFFSET { 0, 70, 0 }
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
