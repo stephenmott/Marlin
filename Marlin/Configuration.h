@@ -927,7 +927,7 @@
  *
  * In the following example the X and Y offsets are both positive:
  *
- *   #define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
+ *   #define NOZZLE_TO_PROBE_OFFSET { 10, 10, 1.65 }
  *
  *     +-- BACK ---+
  *     |           |
