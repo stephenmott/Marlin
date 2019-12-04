@@ -24,15 +24,16 @@
 
 #define CPU_32_BIT
 
-#include "../../inc/MarlinConfigPre.h"
-
 #include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
 
 #include "fastio.h"
-#include "timers.h"
 #include "watchdog.h"
+
+#include "timers.h"
+
+#include "../../inc/MarlinConfigPre.h"
 
 #include <stdint.h>
 
@@ -149,19 +150,19 @@ extern uint16_t HAL_adc_result;
 // Memory related
 #define __bss_end __bss_end__
 
-inline void HAL_init() {}
+inline void HAL_init(void) { }
 
 // Clear reset reason
-void HAL_clear_reset_source();
+void HAL_clear_reset_source (void);
 
 // Reset reason
-uint8_t HAL_get_reset_source();
+uint8_t HAL_get_reset_source(void);
 
 void _delay_ms(const int delay);
 
 /*
 extern "C" {
-  int freeMemory();
+  int freeMemory(void);
 }
 */
 
@@ -178,7 +179,7 @@ int freeMemory() {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 
-static inline int freeMemory() {
+static inline int freeMemory(void) {
   volatile char top;
   return &top - reinterpret_cast<char*>(_sbrk(0));
 }
@@ -204,15 +205,14 @@ void eeprom_update_block (const void *__src, void *__dst, size_t __n);
 
 #define HAL_ANALOG_SELECT(pin) pinMode(pin, INPUT)
 
-inline void HAL_adc_init() {}
+inline void HAL_adc_init(void) {}
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
-#define HAL_ADC_RESOLUTION  10
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result();
+uint16_t HAL_adc_get_result(void);
 
 #define GET_PIN_MAP_PIN(index) index
 #define GET_PIN_MAP_INDEX(pin) pin

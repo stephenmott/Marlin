@@ -33,14 +33,14 @@
 #include <libmaple/iwdg.h>
 #include "watchdog.h"
 
-void HAL_watchdog_refresh() {
+void watchdog_reset() {
   #if DISABLED(PINS_DEBUGGING) && PIN_EXISTS(LED)
     TOGGLE(LED_PIN);  // heartbeat indicator
   #endif
   iwdg_feed();
 }
 
-void watchdogSetup() {
+void watchdogSetup(void) {
   // do whatever. don't remove this function.
 }
 
@@ -51,7 +51,7 @@ void watchdogSetup() {
  *
  * @details The watchdog clock is 40Khz. We need a 4 seconds interval, so use a /256 preescaler and 625 reload value (counts down to 0)
  */
-void watchdog_init() {
+void watchdog_init(void) {
   //iwdg_init(IWDG_PRE_256, STM32F1_WD_RELOAD);
 }
 

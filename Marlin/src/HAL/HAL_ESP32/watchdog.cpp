@@ -28,11 +28,11 @@
 
 #include "watchdog.h"
 
-void watchdogSetup() {
+void watchdogSetup(void) {
   // do whatever. don't remove this function.
 }
 
-void watchdog_init() {
+void watchdog_init(void) {
   // TODO
 }
 

@@ -29,7 +29,7 @@
 
 static SPISettings spiConfig;
 
-void spiBegin() {
+void spiBegin(void) {
   #if !PIN_EXISTS(SS)
     #error SS_PIN not defined!
   #endif
@@ -65,7 +65,7 @@ void spiInit(uint8_t spiRate) {
   SPI.begin();
 }
 
-uint8_t spiRec() {
+uint8_t spiRec(void) {
   SPI.beginTransaction(spiConfig);
   uint8_t returnByte = SPI.transfer(0xFF);
   SPI.endTransaction();

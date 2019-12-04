@@ -64,7 +64,7 @@
   // ------------------------
   // Hardware SPI
   // ------------------------
-  void spiBegin() {
+  void spiBegin(void) {
     spiInit(SPI_HALF_SPEED);
   }
 
@@ -92,7 +92,7 @@
    *
    * @details
    */
-  uint8_t spiRec() {
+  uint8_t spiRec(void) {
     sdSPI.beginTransaction(spiConfig);
     uint8_t returnByte = sdSPI.transfer(0xFF);
     sdSPI.endTransaction();

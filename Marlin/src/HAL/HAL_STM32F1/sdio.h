@@ -121,13 +121,13 @@ typedef struct {
 // Public functions
 // ------------------------
 
-inline uint32_t SDIO_GetCardState();
+inline uint32_t SDIO_GetCardState(void);
 
-bool SDIO_CmdGoIdleState();
-bool SDIO_CmdSendCID();
+bool SDIO_CmdGoIdleState(void);
+bool SDIO_CmdSendCID(void);
 bool SDIO_CmdSetRelAdd(uint32_t *rca);
 bool SDIO_CmdSelDesel(uint32_t address);
-bool SDIO_CmdOperCond();
+bool SDIO_CmdOperCond(void);
 bool SDIO_CmdSendCSD(uint32_t argument);
 bool SDIO_CmdSendStatus(uint32_t argument);
 bool SDIO_CmdReadSingleBlock(uint32_t address);
@@ -139,11 +139,11 @@ bool SDIO_CmdAppOperCommand(uint32_t sdType);
 bool SDIO_CmdAppSetClearCardDetect(uint32_t rsa);
 
 void SDIO_SendCommand(uint16_t command, uint32_t argument);
-uint8_t SDIO_GetCommandResponse();
+uint8_t SDIO_GetCommandResponse(void);
 uint32_t SDIO_GetResponse(uint32_t response);
-bool SDIO_GetCmdError();
+bool SDIO_GetCmdError(void);
 bool SDIO_GetCmdResp1(uint8_t command);
-bool SDIO_GetCmdResp2();
-bool SDIO_GetCmdResp3();
+bool SDIO_GetCmdResp2(void);
+bool SDIO_GetCmdResp3(void);
 bool SDIO_GetCmdResp6(uint8_t command, uint32_t *rca);
-bool SDIO_GetCmdResp7();
+bool SDIO_GetCmdResp7(void);

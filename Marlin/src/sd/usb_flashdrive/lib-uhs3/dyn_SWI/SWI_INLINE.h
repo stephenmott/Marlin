@@ -23,7 +23,7 @@
  */
 #ifdef DYN_SWI_H
 #ifndef SWI_INLINE_H
-#define SWI_INLINE_H
+#define	SWI_INLINE_H
 
 #ifndef SWI_MAXIMUM_ALLOWED
 #define SWI_MAXIMUM_ALLOWED 4
@@ -42,12 +42,12 @@ extern "C" {
 }
 #else
 
-__attribute__((always_inline)) static inline void __DSB() {
+__attribute__((always_inline)) static inline void __DSB(void) {
         __asm__ volatile ("dsb");
 }
 #endif // defined(__USE_CMSIS_VECTORS__)
 #else // defined(__arm__)
-__attribute__((always_inline)) static inline void __DSB() {
+__attribute__((always_inline)) static inline void __DSB(void) {
         __asm__ volatile ("sync" : : : "memory");
 }
 #endif // defined(__arm__)
@@ -66,12 +66,12 @@ void
 #else
         __attribute__((interrupt(),nomips16))
 #endif
-        softISR() {
+        softISR(void) {
 #else
 #ifdef ARDUINO_spresense_ast
-unsigned int softISR() {
+unsigned int softISR(void) {
 #else
-void softISR() {
+void softISR(void) {
 #endif
 #endif
 
@@ -121,9 +121,9 @@ void softISR() {
 #ifdef __arm__
 #ifndef interruptsStatus
 #define interruptsStatus() __interruptsStatus()
-static inline unsigned char __interruptsStatus() __attribute__((always_inline, unused));
+static inline unsigned char __interruptsStatus(void) __attribute__((always_inline, unused));
 
-static inline unsigned char __interruptsStatus() {
+static inline unsigned char __interruptsStatus(void) {
         unsigned int primask;
         asm volatile ("mrs %0, primask" : "=r" (primask));
         if(primask) return 0;
@@ -134,7 +134,7 @@ static inline unsigned char __interruptsStatus() {
 /**
  * Initialize the Dynamic (class) Software Interrupt
  */
-static void Init_dyn_SWI() {
+static void Init_dyn_SWI(void) {
         if(!dyn_SWI_initied) {
 #ifdef __USE_CMSIS_VECTORS__
                 uint32_t *X_Vectors = (uint32_t*)SCB->VTOR;
@@ -201,7 +201,7 @@ int exec_SWI(const dyn_SWI* klass) {
 /**
  * Initialize the Dynamic (class) Software Interrupt
  */
-static void Init_dyn_SWI() {
+static void Init_dyn_SWI(void) {
         if(!dyn_SWI_initied) {
                 uint32_t sreg = disableInterrupts();
 
@@ -240,7 +240,7 @@ int exec_SWI(const dyn_SWI* klass) {
 }
 
 #endif /* defined(__arm__) */
-#endif  /* SWI_INLINE_H */
+#endif	/* SWI_INLINE_H */
 #else
 #error "Never include SWI_INLINE.h directly, include dyn_SWI.h instead"
 #endif

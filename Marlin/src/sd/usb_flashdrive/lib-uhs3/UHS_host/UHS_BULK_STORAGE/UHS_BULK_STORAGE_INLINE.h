@@ -378,7 +378,7 @@ uint8_t UHS_NI UHS_Bulk_Storage::SetInterface(ENUMERATION_INFO *ei) {
  *
  * @return 0 for success
  */
-uint8_t UHS_NI UHS_Bulk_Storage::Start() {
+uint8_t UHS_NI UHS_Bulk_Storage::Start(void) {
         uint8_t rcode;
         //        Serial.print("Bulk Start from USB Host @ 0x");
         //        Serial.println((uint32_t)pUsb, HEX);
@@ -541,7 +541,7 @@ Fail:
  *
  * @return
  */
-//void UHS_NI UHS_Bulk_Storage::Release() {
+//void UHS_NI UHS_Bulk_Storage::Release(void) {
 //        pUsb->DisablePoll();
 //        OnRelease();
 //        DriverDefaults();
@@ -602,7 +602,7 @@ bool UHS_NI UHS_Bulk_Storage::CheckLUN(uint8_t lun) {
  *
  * Scan for media change on all LUNs
  */
-void UHS_NI UHS_Bulk_Storage::CheckMedia() {
+void UHS_NI UHS_Bulk_Storage::CheckMedia(void) {
         if(!bAddress) return;
         for(uint8_t lun = 0; lun <= bMaxLUN; lun++) {
                 if(TestUnitReady(lun)) {
@@ -630,7 +630,7 @@ void UHS_NI UHS_Bulk_Storage::CheckMedia() {
  * For driver use only.
  *
  */
-void UHS_NI UHS_Bulk_Storage::Poll() {
+void UHS_NI UHS_Bulk_Storage::Poll(void) {
         if((long)(millis() - qNextPollTime) >= 0L) {
 
                 CheckMedia();
@@ -841,7 +841,7 @@ uint8_t UHS_NI UHS_Bulk_Storage::ClearEpHalt(uint8_t index) {
  * For driver use only.
  *
  */
-void UHS_NI UHS_Bulk_Storage::Reset() {
+void UHS_NI UHS_Bulk_Storage::Reset(void) {
         if(!bAddress) return;
 
         while(pUsb->ctrlReq(bAddress, mkSETUP_PKT16(UHS_BULK_bmREQ_OUT, UHS_BULK_REQ_BOMSR, 0x0000U, bIface, 0), 0, NULL) == 0x01) {
@@ -858,7 +858,7 @@ void UHS_NI UHS_Bulk_Storage::Reset() {
  *
  * @return 0 if successful
  */
-uint8_t UHS_NI UHS_Bulk_Storage::ResetRecovery() {
+uint8_t UHS_NI UHS_Bulk_Storage::ResetRecovery(void) {
         if(!bAddress) return UHS_BULK_ERR_DEVICE_DISCONNECTED;
         Notify(PSTR("\r\nResetRecovery\r\n"), 0x80);
         Notify(PSTR("-----------------\r\n"), 0x80);
@@ -883,7 +883,7 @@ uint8_t UHS_NI UHS_Bulk_Storage::ResetRecovery() {
  *
  * Clear all EP data and clear all LUN status
  */
-void UHS_NI UHS_Bulk_Storage::DriverDefaults() {
+void UHS_NI UHS_Bulk_Storage::DriverDefaults(void) {
 
         pUsb->DeviceDefaults(MASS_MAX_ENDPOINTS, this);
 

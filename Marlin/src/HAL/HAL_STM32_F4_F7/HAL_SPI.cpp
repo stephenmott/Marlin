@@ -71,7 +71,7 @@ static SPISettings spiConfig;
  *
  * @details Only configures SS pin since libmaple creates and initialize the SPI object
  */
-void spiBegin() {
+void spiBegin(void) {
   #if !defined(SS_PIN) || SS_PIN < 0
     #error SS_PIN not defined!
   #endif
@@ -103,7 +103,7 @@ void spiInit(uint8_t spiRate) {
  *
  * @details
  */
-uint8_t spiRec() {
+uint8_t spiRec(void) {
   SPI.beginTransaction(spiConfig);
   uint8_t returnByte = SPI.transfer(0xFF);
   SPI.endTransaction();

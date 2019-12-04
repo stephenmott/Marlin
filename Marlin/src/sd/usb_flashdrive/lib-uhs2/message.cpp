@@ -74,19 +74,19 @@ void E_Notify(double d, int lvl) {
 
 #ifdef DEBUG_USB_HOST
 
-  void NotifyFailGetDevDescr() {
+  void NotifyFailGetDevDescr(void) {
     Notify(PSTR("\r\ngetDevDescr "), 0x80);
   }
 
-  void NotifyFailSetDevTblEntry() {
+  void NotifyFailSetDevTblEntry(void) {
     Notify(PSTR("\r\nsetDevTblEn "), 0x80);
   }
 
-  void NotifyFailGetConfDescr() {
+  void NotifyFailGetConfDescr(void) {
     Notify(PSTR("\r\ngetConf "), 0x80);
   }
 
-  void NotifyFailSetConfDescr() {
+  void NotifyFailSetConfDescr(void) {
     Notify(PSTR("\r\nsetConf "), 0x80);
   }
 

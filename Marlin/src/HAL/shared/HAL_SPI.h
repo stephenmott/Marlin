@@ -59,7 +59,7 @@
 //
 
 // Initialize SPI bus
-void spiBegin();
+void spiBegin(void);
 
 // Configure SPI for specified SPI speed
 void spiInit(uint8_t spiRate);
@@ -68,7 +68,7 @@ void spiInit(uint8_t spiRate);
 void spiSend(uint8_t b);
 
 // Read single byte from SPI
-uint8_t spiRec();
+uint8_t spiRec(void);
 
 // Read from SPI into buffer
 void spiRead(uint8_t* buf, uint16_t nbyte);

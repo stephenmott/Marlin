@@ -27,8 +27,8 @@
 
 #ifdef __STM32F1__
 
-#include "../../inc/MarlinConfig.h"
 #include "HAL.h"
+#include "../../inc/MarlinConfig.h"
 
 #include <STM32ADC.h>
 
@@ -82,7 +82,7 @@
 // Public Variables
 // ------------------------
 
-#if (defined(SERIAL_USB) && !defined(USE_USB_COMPOSITE))
+#if (!defined(SERIAL_USB) && !defined(USE_USB_COMPOSITE))
   USBSerial SerialUSB;
 #endif
 
@@ -120,9 +120,6 @@ const uint8_t adc_pins[] = {
   #endif
   #if ENABLED(FILAMENT_WIDTH_SENSOR)
     FILWIDTH_PIN,
-  #endif
-  #if ENABLED(ADC_KEYPAD)
-    ADC_KEYPAD_PIN,
   #endif
   #if HAS_JOY_ADC_X
     JOY_X_PIN,
@@ -162,9 +159,6 @@ enum TEMP_PINS : char {
   #endif
   #if ENABLED(FILAMENT_WIDTH_SENSOR)
     FILWIDTH,
-  #endif
-  #if ENABLED(ADC_KEYPAD)
-    ADC_KEY,
   #endif
   #if HAS_JOY_ADC_X
     JOY_X,
@@ -207,16 +201,16 @@ static void NVIC_SetPriorityGrouping(uint32_t PriorityGroup) {
     #if SERIAL_PORT > 0
       #if SERIAL_PORT2
         #if SERIAL_PORT2 > 0
-          void board_setup_usb() {}
+          void board_setup_usb(void) {}
         #endif
       #else
-        void board_setup_usb() {}
+        void board_setup_usb(void) {}
       #endif
     #endif
   } }
 #endif
 
-void HAL_init() {
+void HAL_init(void) {
   NVIC_SetPriorityGrouping(0x3);
   #if PIN_EXISTS(LED)
     OUT_WRITE(LED_PIN, LOW);
@@ -232,14 +226,14 @@ void HAL_init() {
 }
 
 // HAL idle task
-void HAL_idletask() {
+void HAL_idletask(void) {
   #ifdef USE_USB_COMPOSITE
     #if ENABLED(SHARED_SD_CARD)
       // If Marlin is using the SD card we need to lock it to prevent access from
       // a PC via USB.
       // Other HALs use IS_SD_PRINTING() and IS_SD_FILE_OPEN() to check for access but
       // this will not reliably detect delete operations. To be safe we will lock
-      // the disk if Marlin has it mounted. Unfortunately there is currently no way
+      // the disk if Marlin has it mounted. Unfortuately there is currently no way
       // to unmount the disk from the LCD menu.
       // if (IS_SD_PRINTING() || IS_SD_FILE_OPEN())
       /* copy from lpc1768 framework, should be fixed later for process SHARED_SD_CARD*/
@@ -251,19 +245,19 @@ void HAL_idletask() {
 
 /* VGPV Done with defines
 // disable interrupts
-void cli() { noInterrupts(); }
+void cli(void) { noInterrupts(); }
 
 // enable interrupts
-void sei() { interrupts(); }
+void sei(void) { interrupts(); }
 */
 
-void HAL_clear_reset_source() { }
+void HAL_clear_reset_source(void) { }
 
 /**
  * TODO: Check this and change or remove.
  * currently returns 1 that's equal to poweron reset.
  */
-uint8_t HAL_get_reset_source() { return 1; }
+uint8_t HAL_get_reset_source(void) { return 1; }
 
 void _delay_ms(const int delay_ms) { delay(delay_ms); }
 
@@ -278,7 +272,7 @@ extern "C" {
 // return free memory between end of heap (or end bss) and whatever is current
 
 /*
-#include <wirish/syscalls.c>
+#include "wirish/syscalls.c"
 //extern caddr_t _sbrk(int incr);
 #ifndef CONFIG_HEAP_END
 extern char _lm_heap_end;
@@ -303,7 +297,7 @@ extern "C" {
 // ADC
 // ------------------------
 // Init the AD in continuous capture mode
-void HAL_adc_init() {
+void HAL_adc_init(void) {
   // configure the ADC
   adc.calibrate();
   #if F_CPU > 72000000
@@ -358,14 +352,11 @@ void HAL_adc_start_conversion(const uint8_t adc_pin) {
     #if ENABLED(FILAMENT_WIDTH_SENSOR)
       case FILWIDTH_PIN: pin_index = FILWIDTH; break;
     #endif
-    #if ENABLED(ADC_KEYPAD)
-      case ADC_KEYPAD_PIN: pin_index = ADC_KEY; break;
-    #endif
   }
   HAL_adc_result = (HAL_adc_results[(int)pin_index] >> 2) & 0x3FF; // shift to get 10 bits only.
 }
 
-uint16_t HAL_adc_get_result() { return HAL_adc_result; }
+uint16_t HAL_adc_get_result(void) { return HAL_adc_result; }
 
 uint16_t analogRead(pin_t pin) {
   const bool is_analog = _GET_MODE(pin) == GPIO_INPUT_ANALOG;

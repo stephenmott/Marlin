@@ -28,8 +28,8 @@
 #include "../shared/Delay.h"
 
 // Interrupts
-void cli() { } // Disable
-void sei() { } // Enable
+void cli(void) { } // Disable
+void sei(void) { }  // Enable
 
 // Time functions
 void _delay_ms(const int delay_ms) {

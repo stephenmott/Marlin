@@ -32,7 +32,7 @@
 // process, because watchdog initialization at hardware reset on SAM3X8E
 // is unreliable, and there is risk of unintended resets if we delay
 // that initialization to a later time.
-void watchdogSetup() {
+void watchdogSetup(void) {
 
   #if ENABLED(USE_WATCHDOG)
 
@@ -106,7 +106,7 @@ void watchdogSetup() {
   // Initialize watchdog - On SAM3X, Watchdog was already configured
   //  and enabled or disabled at startup, so no need to reconfigure it
   //  here.
-  void watchdog_init() {
+  void watchdog_init(void) {
     // Reset watchdog to start clean
     WDT_Restart(WDT);
   }

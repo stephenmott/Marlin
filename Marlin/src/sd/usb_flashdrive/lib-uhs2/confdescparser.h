@@ -69,7 +69,7 @@ class ConfigDescParser : public USBReadParser {
 
 public:
 
-  void SetOR() { UseOr = true; }
+  void SetOR(void) { UseOr = true; }
   ConfigDescParser(UsbConfigXtracter *xtractor);
   void Parse(const uint16_t len, const uint8_t *pbuf, const uint16_t &offset);
 };

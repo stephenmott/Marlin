@@ -54,10 +54,7 @@
 #define TEMP_2_PIN         13   // Analog Input. 10 for tool3 -> 13 for chambertemp
 #define TEMP_3_PIN         11   // Analog Input. 11 for tool4 -> 13 for chambertemp
 #define TEMP_BED_PIN       14   // Analog Input
-
-#ifndef TEMP_CHAMBER_PIN
-  //#define TEMP_CHAMBER_PIN 13 // Analog Input
-#endif
+//#define TEMP_CHAMBER_PIN   13   // Analog Input
 
 //
 // Heaters / Fans

@@ -38,39 +38,22 @@
 
 #include <stdint.h>
 
-// Define MYSERIAL0/1 before MarlinSerial includes!
-#if SERIAL_PORT == -1
-  #define MYSERIAL0 customizedSerial1
-#elif SERIAL_PORT == 0
-  #define MYSERIAL0 Serial
-#elif SERIAL_PORT == 1
-  #define MYSERIAL0 Serial1
-#elif SERIAL_PORT == 2
-  #define MYSERIAL0 Serial2
-#elif SERIAL_PORT == 3
-  #define MYSERIAL0 Serial3
-#else
-  #error "The required SERIAL_PORT must be from -1 to 3. Please update your configuration."
+// Serial ports
+#if !WITHIN(SERIAL_PORT, -1, 3)
+  #error "SERIAL_PORT must be from -1 to 3"
 #endif
 
+// MYSERIAL0 required before MarlinSerial includes!
+#define MYSERIAL0 customizedSerial1
+
 #ifdef SERIAL_PORT_2
-  #if SERIAL_PORT_2 == SERIAL_PORT
-    #error "SERIAL_PORT_2 must be different from SERIAL_PORT. Please update your configuration."
-  #endif
-  #if SERIAL_PORT_2 == -1
-    #define MYSERIAL1 customizedSerial2
-  #elif SERIAL_PORT_2 == 0
-    #define MYSERIAL1 Serial
-  #elif SERIAL_PORT_2 == 1
-    #define MYSERIAL1 Serial1
-  #elif SERIAL_PORT_2 == 2
-    #define MYSERIAL1 Serial2
-  #elif SERIAL_PORT_2 == 3
-    #define MYSERIAL1 Serial3
-  #else
-    #error "SERIAL_PORT_2 must be from -1 to 3. Please update your configuration."
+  #if !WITHIN(SERIAL_PORT_2, -1, 3)
+    #error "SERIAL_PORT_2 must be from -1 to 3"
+  #elif SERIAL_PORT_2 == SERIAL_PORT
+    #error "SERIAL_PORT_2 must be different than SERIAL_PORT"
   #endif
   #define NUM_SERIAL 2
+  #define MYSERIAL1 customizedSerial2
 #else
   #define NUM_SERIAL 1
 #endif
@@ -105,11 +88,11 @@ typedef int8_t pin_t;
 #define ENABLE_ISRS()  __enable_irq()
 #define DISABLE_ISRS() __disable_irq()
 
-void cli();                     // Disable interrupts
-void sei();                     // Enable interrupts
+void cli(void);                     // Disable interrupts
+void sei(void);                     // Enable interrupts
 
-void HAL_clear_reset_source();  // clear reset reason
-uint8_t HAL_get_reset_source(); // get reset reason
+void HAL_clear_reset_source(void);  // clear reset reason
+uint8_t HAL_get_reset_source(void); // get reset reason
 
 //
 // EEPROM
@@ -130,15 +113,14 @@ extern uint16_t HAL_adc_result;     // result of last ADC conversion
 
 #define HAL_ANALOG_SELECT(pin)
 
-inline void HAL_adc_init() {}//todo
+inline void HAL_adc_init(void) {}//todo
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
-#define HAL_ADC_RESOLUTION  10
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result();
+uint16_t HAL_adc_get_result(void);
 
 //
 // Pin Map
@@ -156,8 +138,8 @@ void noTone(const pin_t _pin);
 
 // Enable hooks into idle and setup for HAL
 #define HAL_IDLETASK 1
-void HAL_idletask();
-void HAL_init();
+void HAL_idletask(void);
+void HAL_init(void);
 
 //
 // Utility functions
@@ -166,7 +148,7 @@ void _delay_ms(const int delay);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-int freeMemory();
+int freeMemory(void);
 #pragma GCC diagnostic pop
 
 #ifdef __cplusplus

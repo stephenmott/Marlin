@@ -98,7 +98,7 @@ struct UHS_BULK_CommandBlockWrapperBase {
         volatile uint8_t bmCBWFlags;
 public:
 
-        UHS_BULK_CommandBlockWrapperBase() {
+        UHS_BULK_CommandBlockWrapperBase(void) {
         }
 
         UHS_BULK_CommandBlockWrapperBase(uint32_t tag, uint32_t xflen, uint8_t flgs) :
@@ -181,11 +181,11 @@ public:
 
         volatile UHS_EpInfo epInfo[MASS_MAX_ENDPOINTS];
 
-        uint8_t GetbMaxLUN() {
+        uint8_t GetbMaxLUN(void) {
                 return bMaxLUN; // Max LUN
         }
 
-        uint8_t GetbTheLUN() {
+        uint8_t GetbTheLUN(void) {
                 return bTheLUN; // Active LUN
         }
 
@@ -203,23 +203,23 @@ public:
 
 
         // Configure and internal methods, these should never be called by a user's sketch.
-        uint8_t Start();
+        uint8_t Start(void);
         bool OKtoEnumerate(ENUMERATION_INFO *ei);
         uint8_t SetInterface(ENUMERATION_INFO *ei);
 
-        uint8_t GetAddress() {
+        uint8_t GetAddress(void) {
                 return bAddress;
         };
 
 
-        void Poll();
+        void Poll(void);
 
-        void DriverDefaults();
+        void DriverDefaults(void);
 
 
 private:
-        void Reset();
-        void CheckMedia();
+        void Reset(void);
+        void CheckMedia(void);
 
         bool IsValidCBW(uint8_t size, uint8_t *pcbw);
         bool IsMeaningfulCBW(uint8_t size, uint8_t *pcbw);
