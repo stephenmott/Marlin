@@ -736,7 +736,7 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 1280, 1000 }
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 3000 } // E3D
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 1080 } // BTech
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 150 } // Prusa
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 300 } // Prusa
 
 /**
  * Default Max Feed Rate (mm/s)
