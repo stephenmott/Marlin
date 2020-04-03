@@ -736,7 +736,8 @@
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 1280, 1000 }
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 3000 } // E3D
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 1080 } // BTech
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 300 } // Prusa
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 300 } // Prusa
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 791, 818 } // Hermes
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -945,7 +946,8 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 20, -5, -2.25 }
+//#define NOZZLE_TO_PROBE_OFFSET { 20, -5, -2.25 }
+#define NOZZLE_TO_PROBE_OFFSET { 50, -34, -1.82 } // Hermes
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1076,15 +1078,15 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 270
-#define Y_BED_SIZE 190
+#define X_BED_SIZE 283
+#define Y_BED_SIZE 199
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS 42
+#define X_MIN_POS 12
+#define Y_MIN_POS 16 // 42
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS 232
+#define X_MAX_POS 295 //X_BED_SIZE
+#define Y_MAX_POS 215
 #define Z_MAX_POS 270
 
 /**
@@ -1541,8 +1543,10 @@
   // Specify positions as { X, Y, Z }
   
   
-  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
-  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
+//  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
+//  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
+  #define NOZZLE_CLEAN_START_POINT { 115, -8, -3 } // Hermes
+  #define NOZZLE_CLEAN_END_POINT   { 190, -16, -3 } // Hermes
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
@@ -2236,3 +2240,8 @@
 
 // Allow servo angle to be edited and saved to EEPROM
 //#define EDITABLE_SERVO_ANGLES
+    // Only power servos during movement, otherwise leave off to prevent jitter
+    //#define DEACTIVATE_SERVOS_AFTER_MOVE
+
+    // Allow servo angle to be edited and saved to EEPROM
+    
