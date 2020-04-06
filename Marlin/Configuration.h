@@ -947,7 +947,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 0, 70, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { 0, 70, 0.3 }
 
 // Certain types of probes need to stay away from edges
 #define MIN_PROBE_EDGE 10
@@ -1542,8 +1542,8 @@
   #define NOZZLE_CLEAN_TRIANGLES  5
 
   // Specify positions as { X, Y, Z }
-  #define NOZZLE_CLEAN_START_POINT {235, 5, -1.5 }
-  #define NOZZLE_CLEAN_END_POINT   {310, 10, -1.5 }
+  #define NOZZLE_CLEAN_START_POINT {235, 8, -0.5 }
+  #define NOZZLE_CLEAN_END_POINT   {310, 18, -0.5 }
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
