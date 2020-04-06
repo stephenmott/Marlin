@@ -177,13 +177,8 @@
  * Thermal Protection parameters for the bed are just as above for hotends.
  */
 #if ENABLED(THERMAL_PROTECTION_BED)
-<<<<<<< HEAD
   #define THERMAL_PROTECTION_BED_PERIOD 30    // Seconds
   #define THERMAL_PROTECTION_BED_HYSTERESIS 5 // Degrees Celsius
-=======
-  #define THERMAL_PROTECTION_BED_PERIOD        20 // Seconds
-  #define THERMAL_PROTECTION_BED_HYSTERESIS     2 // Degrees Celsius
->>>>>>> MarlinFirmware/2.0.x
 
   /**
    * As described above, except for the bed (M140/M190/M303).
@@ -517,20 +512,7 @@
   //#define Y_DUAL_ENDSTOPS
   #if ENABLED(Y_DUAL_ENDSTOPS)
     #define Y2_USE_ENDSTOP _YMAX_
-<<<<<<< HEAD
-    #define Y_DUAL_ENDSTOPS_ADJUSTMENT  0
-  #endif
-#endif
-
-#define Z_DUAL_STEPPER_DRIVERS
-#if ENABLED(Z_DUAL_STEPPER_DRIVERS)
-  //#define Z_DUAL_ENDSTOPS
-  #if ENABLED(Z_DUAL_ENDSTOPS)
-    #define Z2_USE_ENDSTOP _XMAX_
-    #define Z_DUAL_ENDSTOPS_ADJUSTMENT  0
-=======
     #define Y2_ENDSTOP_ADJUSTMENT  0
->>>>>>> MarlinFirmware/2.0.x
   #endif
 #endif
 
