@@ -311,20 +311,6 @@
     #else                                         // !FYSETC_MINI_12864
 
       #if ENABLED(MKS_MINI_12864)
-<<<<<<< HEAD
-<<<<<<< HEAD:Marlin/src/pins/lpc1768/pins_BIGTREE_SKR_V1.3.h
-        #define DOGLCD_CS  P1_21
-        #define DOGLCD_A0  P1_22
-        #define LCD_PINS_DC DOGLCD_A0 
-=======
-        #define DOGLCD_CS    P1_21
-        #define DOGLCD_A0    P1_22
-        #define DOGLCD_SCK   P0_15
-        #define DOGLCD_MOSI  P0_18
-        #define FORCE_SOFT_SPI
->>>>>>> MarlinFirmware/2.0.x:Marlin/src/pins/lpc1768/pins_BTT_SKR_V1_3.h
-=======
-
         #define DOGLCD_CS           EXPA1_05_PIN
         #define DOGLCD_A0           EXPA1_04_PIN
         #define DOGLCD_SCK          EXPA2_09_PIN
@@ -353,7 +339,6 @@
         #define DOGLCD_MOSI         EXPA1_03_PIN
         #define FORCE_SOFT_SPI
         #define LCD_BACKLIGHT_PIN          -1
->>>>>>> MarlinFirmware/2.0.x
       #endif
 
       // #if EITHER(MKS_12864OLED,MKS_12864OLED_SSD1306)

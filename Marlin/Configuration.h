@@ -416,7 +416,7 @@
 #define TEMP_SENSOR_6 0
 #define TEMP_SENSOR_7 0
 #define TEMP_SENSOR_BED 1
-#define TEMP_SENSOR_PROBE 0
+#define TEMP_SENSOR_PROBE 1
 #define TEMP_SENSOR_CHAMBER 0
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
@@ -976,11 +976,11 @@
  * Specify a Probe position as { X, Y, Z }
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 20, -5, -2.25 }
-#define NOZZLE_TO_PROBE_OFFSET { 50, -34, -1.82 } // Hermes
+#define NOZZLE_TO_PROBE_OFFSET { 60, -34, -0.40 } // Hermes
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define MIN_PROBE_EDGE 10
+#define MIN_PROBE_EDGE 20
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 8000
@@ -1022,11 +1022,11 @@
 #define Z_CLEARANCE_MULTI_PROBE     5 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
-#define Z_PROBE_LOW_POINT          -5 // Farthest distance below the trigger-point to go before stopping
+#define Z_PROBE_LOW_POINT          -20 // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
-#define Z_PROBE_OFFSET_RANGE_MIN -20
-#define Z_PROBE_OFFSET_RANGE_MAX 20
+#define Z_PROBE_OFFSET_RANGE_MIN -10
+#define Z_PROBE_OFFSET_RANGE_MAX 10
 
 // Enable the M48 repeatability test to test probe accuracy
 //#define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -1113,14 +1113,14 @@
 
 // The size of the print bed
 #define X_BED_SIZE 283
-#define Y_BED_SIZE 199
+#define Y_BED_SIZE 194
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 12
 #define Y_MIN_POS 16 // 42
 #define Z_MIN_POS 0
 #define X_MAX_POS 295 //X_BED_SIZE
-#define Y_MAX_POS 215
+#define Y_MAX_POS 210
 #define Z_MAX_POS 270
 
 /**
@@ -1232,7 +1232,7 @@
  * Normally G28 leaves leveling disabled on completion. Enable
  * this option to have G28 restore the prior leveling state.
  */
-//#define RESTORE_LEVELING_AFTER_G28
+#define RESTORE_LEVELING_AFTER_G28
 
 /**
  * Enable detailed logging of G28, G29, M48, etc.
@@ -1331,7 +1331,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-//#define LCD_BED_LEVELING
+#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -1576,8 +1576,8 @@
   
 //  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
 //  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
-  #define NOZZLE_CLEAN_START_POINT { 115, -8, -3 } // Hermes
-  #define NOZZLE_CLEAN_END_POINT   { 190, -16, -3 } // Hermes
+  #define NOZZLE_CLEAN_START_POINT { 115, -12, -3 } // Hermes
+  #define NOZZLE_CLEAN_END_POINT   { 190, -21, -3 } // Hermes
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
