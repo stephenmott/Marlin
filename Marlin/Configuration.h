@@ -488,10 +488,13 @@
   //#define DEFAULT_Kp 17.04
   //#define DEFAULT_Ki 1.09
   //#define DEFAULT_Kd 66.30
-  #define DEFAULT_Kp 20.07
-  #define DEFAULT_Ki 1.50
-  #define DEFAULT_Kd 67.00
+  //#define DEFAULT_Kp 20.07
+  //#define DEFAULT_Ki 1.50
+  //#define DEFAULT_Kd 67.00
 
+  #define DEFAULT_Kp 18.33
+  #define DEFAULT_Ki 1.08
+  #define DEFAULT_Kd 77.73
   // Ultimaker
   //#define DEFAULT_Kp 22.2
   //#define DEFAULT_Ki 1.08
@@ -971,7 +974,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 0, 70, 0.3 }
+#define NOZZLE_TO_PROBE_OFFSET { 0, 70, 0.1 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1158,7 +1161,7 @@
 #define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
-  #define FIL_RUNOUT_INVERTING false // Set to true to invert the logic of the sensor.
+  #define FIL_RUNOUT_INVERTING true // Set to true to invert the logic of the sensor.
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   //#define FIL_RUNOUT_PULLDOWN      // Use internal pulldown for filament runout pins.
   #define FIL_RUNOUT_PIN    11
@@ -1569,8 +1572,8 @@
 
   // Specify positions for each tool as { { X, Y, Z }, { X, Y, Z } }
   // Dual hotend system may use { {  -20, (Y_BED_SIZE / 2), (Z_MIN_POS + 1) },  {  420, (Y_BED_SIZE / 2), (Z_MIN_POS + 1) }}
-  #define NOZZLE_CLEAN_START_POINT {235, 8, -0.5 }
-  #define NOZZLE_CLEAN_END_POINT   {310, 18, -0.5 }
+  #define NOZZLE_CLEAN_START_POINT {235, 8, 0 }
+  #define NOZZLE_CLEAN_END_POINT   {310, 18, 0 }
   
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
