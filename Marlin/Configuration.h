@@ -1112,15 +1112,15 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 283
-#define Y_BED_SIZE 194
+#define X_BED_SIZE 292
+#define Y_BED_SIZE 217
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 12
-#define Y_MIN_POS 16 // 42
+#define X_MIN_POS 0
+#define Y_MIN_POS 0 // 42
 #define Z_MIN_POS 0
-#define X_MAX_POS 295 //X_BED_SIZE
-#define Y_MAX_POS 210
+#define X_MAX_POS X_BED_SIZE - X_MIN_POS
+#define Y_MAX_POS Y_BED_SIZE - Y_MIN_POS
 #define Z_MAX_POS 270
 
 /**
@@ -1576,8 +1576,8 @@
   
 //  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
 //  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
-  #define NOZZLE_CLEAN_START_POINT { 115, -12, -3 } // Hermes
-  #define NOZZLE_CLEAN_END_POINT   { 190, -21, -3 } // Hermes
+  #define NOZZLE_CLEAN_START_POINT { 115, -5, -2 } // Hermes
+  #define NOZZLE_CLEAN_END_POINT   { 195, -15, -2 } // Hermes
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
