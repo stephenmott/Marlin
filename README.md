@@ -14,8 +14,8 @@
 
 <img align="right" width=175 src="buildroot/share/pixmaps/logo/marlin-250.png" />
 
-Additional documentation can be found at the [Marlin Home Page](http://marlinfw.org/).
-Please let us know if Marlin misbehaves in any way. Volunteers are standing by!
+Additional documentation can be found at the [Marlin Home Page](https://marlinfw.org/).
+Please test this firmware and let us know if it misbehaves in any way. Volunteers are standing by!
 
 ## Marlin 2.0
 
@@ -54,9 +54,12 @@ To build Marlin 2.0 you'll need [Arduino IDE 1.8.8 or newer](https://www.arduino
 
 - Submit **Bug Fixes** as Pull Requests to the ([bugfix-2.0.x](https://github.com/MarlinFirmware/Marlin/tree/bugfix-2.0.x)) branch.
 <<<<<<< HEAD
+<<<<<<< HEAD
 - Submit **New Features** to the ([dev-2.0.x](https://github.com/MarlinFirmware/Marlin/tree/dev-2.0.x)) branch.
 =======
 - Submit **New Features** to the ([dev-2.1.x](https://github.com/MarlinFirmware/Marlin/tree/dev-2.1.x)) branch.
+>>>>>>> MarlinFirmware/2.0.x
+=======
 >>>>>>> MarlinFirmware/2.0.x
 - Follow the [Coding Standards](http://marlinfw.org/docs/development/coding_standards.html) to gain points with the maintainers.
 - Please submit your questions and concerns to the [Issue Queue](https://github.com/MarlinFirmware/Marlin/issues).
@@ -69,7 +72,7 @@ For best results getting help with configuration and troubleshooting, please use
 - [Marlin Discord](https://discord.gg/n5NJ59y) - Discuss issues with Marlin users and developers
 - Facebook Group ["Marlin Firmware"](https://www.facebook.com/groups/1049718498464482/)
 - RepRap.org [Marlin Forum](http://forums.reprap.org/list.php?415)
-- [Tom's 3D Forums](https://discuss.toms3d.org/)
+- [Tom's 3D Forums](https://forum.toms3d.org/)
 - Facebook Group ["Marlin Firmware for 3D Printers"](https://www.facebook.com/groups/3Dtechtalk/)
 - [Marlin Configuration](https://www.youtube.com/results?search_query=marlin+configuration) on YouTube
 
@@ -77,12 +80,11 @@ For best results getting help with configuration and troubleshooting, please use
 
 The current Marlin dev team consists of:
 
- - Scott Lahteine [[@thinkyhead](https://github.com/thinkyhead)] - USA &nbsp; [Donate](http://www.thinkyhead.com/donate-to-marlin) / Flattr: [![Flattr Scott](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=thinkyhead&url=https://github.com/MarlinFirmware/Marlin&title=Marlin&language=&tags=github&category=software)
+ - Scott Lahteine [[@thinkyhead](https://github.com/thinkyhead)] - USA &nbsp; [Donate](http://www.thinkyhead.com/donate-to-marlin)
  - Roxanne Neufeld [[@Roxy-3D](https://github.com/Roxy-3D)] - USA
  - Chris Pepper [[@p3p](https://github.com/p3p)] - UK
  - Bob Kuhn [[@Bob-the-Kuhn](https://github.com/Bob-the-Kuhn)] - USA
- - João Brazio [[@jbrazio](https://github.com/jbrazio)] - Portugal
- - Erik van der Zalm [[@ErikZalm](https://github.com/ErikZalm)] - Netherlands &nbsp; [![Flattr Erik](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=ErikZalm&url=https://github.com/MarlinFirmware/Marlin&title=Marlin&language=&tags=github&category=software)
+ - Erik van der Zalm [[@ErikZalm](https://github.com/ErikZalm)] - Netherlands &nbsp; [![Flattr Erik](https://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=ErikZalm&url=https://github.com/MarlinFirmware/Marlin&title=Marlin&language=&tags=github&category=software)
 
 ## License
 
