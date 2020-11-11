@@ -493,29 +493,6 @@
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
-<<<<<<< HEAD
-  // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
-
-  // Ultimaker
-  //#define DEFAULT_Kp 22.2
-  //#define DEFAULT_Ki 1.08
-  //#define DEFAULT_Kd 114
-
-  #define DEFAULT_Kp 22.41
-  #define DEFAULT_Ki 1.81
-  #define DEFAULT_Kd 69.54
-
-  // MakerGear
-  //#define DEFAULT_Kp 7.0
-  //#define DEFAULT_Ki 0.1
-  //#define DEFAULT_Kd 12
-
-  // Mendel Parts V9 on 12V
-  //#define DEFAULT_Kp 63.0
-  //#define DEFAULT_Ki 2.25
-  //#define DEFAULT_Kd 440
-
-=======
   #if ENABLED(PID_PARAMS_PER_HOTEND)
     // Specify between 1 and HOTENDS values per array.
     // If fewer than EXTRUDER values are provided, the last element will be repeated.
@@ -523,11 +500,10 @@
     #define DEFAULT_Ki_LIST {   1.08,   1.08 }
     #define DEFAULT_Kd_LIST { 114.00, 114.00 }
   #else
-    #define DEFAULT_Kp  22.20
-    #define DEFAULT_Ki   1.08
-    #define DEFAULT_Kd 114.00
-  #endif
->>>>>>> MarlinFirmware/2.0.x
+    #define DEFAULT_Kp 22.41
+    #define DEFAULT_Ki 1.81
+    #define DEFAULT_Kd 69.54
+ #endif
 #endif // PIDTEMP
 
 //===========================================================================
@@ -563,28 +539,11 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-<<<<<<< HEAD
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-
-  //#define DEFAULT_bedKp 10.00
-  //#define DEFAULT_bedKi .023
-  //#define DEFAULT_bedKd 305.4
-
+  // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
+  // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
   #define DEFAULT_bedKp 97.74
   #define DEFAULT_bedKi 15.45
   #define DEFAULT_bedKd 412.25
-
-  // #define DEFAULT_bedKp 58.24
-  // #define DEFAULT_bedKi 1.82
-  // #define DEFAULT_bedKd 1243.69
-=======
-  // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 10.00
-  #define DEFAULT_bedKi .023
-  #define DEFAULT_bedKd 305.4
->>>>>>> MarlinFirmware/2.0.x
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #endif // PIDTEMPBED
@@ -663,10 +622,10 @@
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
-//#define USE_YMIN_PLUG
+#define USE_YMIN_PLUG
 #define USE_ZMIN_PLUG
 //#define USE_XMAX_PLUG
-#define USE_YMAX_PLUG
+//#define USE_YMAX_PLUG
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
@@ -697,7 +656,7 @@
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+#define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -1034,11 +993,11 @@
  *     O-- FRONT --+
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 20, -5, -2.25 }
-#define NOZZLE_TO_PROBE_OFFSET { 60, -34, -0.40 } // Hermes
+#define NOZZLE_TO_PROBE_OFFSET { 60, -34, -1.35 } // Hermes
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define PROBING_MARGIN 20
+#define PROBING_MARGIN 40
 
 // X and Y axis travel speed (mm/min) between probes
 #define XY_PROBE_SPEED (133*60)
@@ -1550,17 +1509,31 @@
 // @section temperature
 
 // Preheat Constants
-#define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND 200
+#define PREHEAT_1_LABEL        "PLA"
+#define PREHEAT_1_TEMP_HOTEND  200
 #define PREHEAT_1_TEMP_BED     70
-#define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
+#define PREHEAT_1_FAN_SPEED    0 // Value from 0 to 255
 
-#define PREHEAT_2_LABEL       "ABS"
-#define PREHEAT_2_TEMP_HOTEND 245
-#define PREHEAT_2_TEMP_BED    110
-#define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
+#define PREHEAT_2_LABEL        "ABS"
+#define PREHEAT_2_TEMP_HOTEND  245
+#define PREHEAT_2_TEMP_BED     110
+#define PREHEAT_2_FAN_SPEED    0 // Value from 0 to 255
 
-/**
+#define PREHEAT_3_LABEL        "PETG"
+#define PREHEAT_3_TEMP_HOTEND  240
+#define PREHEAT_3_TEMP_BED     80
+#define PREHEAT_3_FAN_SPEED    50 // Value from 0 to 255
+
+#define PREHEAT_4_LABEL        "TPU"
+#define PREHEAT_4_TEMP_HOTEND  255
+#define PREHEAT_4_TEMP_BED     60
+#define PREHEAT_4_FAN_SPEED    50 // Value from 0 to 255
+
+#define PREHEAT_5_LABEL        "POM"
+#define PREHEAT_5_TEMP_HOTEND  250
+#define PREHEAT_5_TEMP_BED     110
+#define PREHEAT_5_FAN_SPEED    0 // Value from 0 to 255
+
  * Nozzle Park
  *
  * Park the nozzle at the given XYZ position on idle or G27.
@@ -1636,8 +1609,8 @@
   
 //  #define NOZZLE_CLEAN_START_POINT { 95, 4, -4 }
 //  #define NOZZLE_CLEAN_END_POINT   { 180, 1, -4 }
-  #define NOZZLE_CLEAN_START_POINT { 115, -5, -2 } // Hermes
-  #define NOZZLE_CLEAN_END_POINT   { 195, -15, -2 } // Hermes
+  #define NOZZLE_CLEAN_START_POINT { 115, 0, -2 } // Hermes
+  #define NOZZLE_CLEAN_END_POINT   { 195, 10, -2 } // Hermes
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5

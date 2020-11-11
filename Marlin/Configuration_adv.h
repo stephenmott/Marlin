@@ -3265,12 +3265,8 @@
  */
 #define HOST_ACTION_COMMANDS
 #if ENABLED(HOST_ACTION_COMMANDS)
-<<<<<<< HEAD
   #define HOST_PROMPT_SUPPORT
-=======
-  //#define HOST_PROMPT_SUPPORT
   //#define HOST_START_MENU_ITEM  // Add a menu item that tells the host to start
->>>>>>> MarlinFirmware/2.0.x
 #endif
 
 /**
